@@ -109,57 +109,53 @@ export const FreeApiModal: React.FC<Props> = ({ isOpen, onClose, onOpenConcept }
   if (!isOpen) return null;
 
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-black/40 backdrop-blur-md animate-in fade-in duration-200"
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-ink/50 p-3 backdrop-blur-sm sm:p-6"
       onClick={onClose}
     >
-      <div 
-        className="relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[32px] border overflow-hidden transition-all duration-300 bg-white dark:bg-[#1c1c1e] border-black/[0.08] dark:border-white/[0.12] text-[#1d1d1f] dark:text-[#f5f5f7] shadow-2xl"
+      <div
+        className="panel relative my-4 flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="free-api-title"
       >
-        {/* Apple Header */}
-        <div className="flex items-center justify-between px-7 py-4 border-b border-black/[0.06] dark:border-white/[0.08] bg-white/80 dark:bg-[#1c1c1e]/80 sticky top-0 z-20 apple-glass">
+        <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-3 border-b border-rule bg-card/95 px-6 py-5 backdrop-blur dark:border-white/10 dark:bg-nightcard/95 sm:px-8">
           <div className="flex items-center gap-3">
-            <span className="w-8 h-8 rounded-full flex items-center justify-center bg-[#34c759]/15 text-[#34c759]">
-              <Gift className="w-4 h-4" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-moss/15 text-moss dark:text-mossbright">
+              <Gift className="h-6 w-6" />
             </span>
             <div>
-              <h2 className="text-base font-bold tracking-tight flex items-center gap-2">
-                Free AI APIs & Starter Tiers
-                <span className="text-[10px] px-2 py-0.5 rounded-full font-mono font-semibold bg-[#34c759]/15 text-[#34c759]">
-                  $0.00 Cost
-                </span>
+              <h2 id="free-api-title" className="font-display text-3xl leading-tight">
+                Free APIs to practice with
               </h2>
-              <p className="text-xs text-[#86868b] dark:text-[#a1a1a6]">
-                Verified zero-cost providers that allow you to build without entering a credit card.
+              <p className="mt-1 text-lg text-mute">
+                Places you can try models without a credit card.
               </p>
             </div>
           </div>
-
           <div className="flex items-center gap-2">
             <button
               onClick={() => { onClose(); onOpenConcept(); }}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-colors bg-black/[0.03] hover:bg-black/[0.06] dark:bg-white/[0.08] dark:hover:bg-white/[0.14] border-black/[0.06] dark:border-white/[0.08] text-[#1d1d1f] dark:text-[#f5f5f7]"
+              className="hidden items-center gap-2 rounded-full border border-rule px-4 py-2.5 text-base font-semibold sm:flex dark:border-white/10"
             >
-              <span>View API Bubble</span>
-              <Sparkles className="w-3.5 h-3.5 text-[#0071e3]" />
+              Open the lesson
+              <Sparkles className="h-4 w-4 text-moss dark:text-mossbright" />
             </button>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full flex items-center justify-center transition-colors bg-black/[0.05] hover:bg-black/[0.1] dark:bg-white/[0.1] dark:hover:bg-white/[0.18] text-[#86868b] dark:text-[#a1a1a6]"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-rule text-mute dark:border-white/10"
               aria-label="Close"
             >
-              <X className="w-4 h-4" />
+              <X className="h-5 w-5" />
             </button>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="overflow-y-auto p-7 space-y-5 flex-1">
-          {/* Quick Notice Banner */}
-          <div className="p-4 rounded-2xl border text-xs leading-relaxed bg-black/[0.02] dark:bg-white/[0.03] border-black/[0.04] dark:border-white/[0.06] text-[#6e6e73] dark:text-[#a1a1a6]">
-            <strong className="text-[#1d1d1f] dark:text-white block mb-0.5">How do Free Tiers work?</strong>
-            AI providers give developers free rate-limited quotas (e.g. 15 requests/minute or 500k tokens/day) to build prototypes and learn. As long as you stay within the rate limit, you are never billed.
+        <div className="flex-1 space-y-6 overflow-y-auto px-6 py-6 sm:px-8">
+          <div className="rounded-3xl bg-canvas p-5 text-lg leading-relaxed text-mute dark:bg-night">
+            <strong className="block text-xl text-ink dark:text-cream">How a free tier works</strong>
+            Labs give you a limited number of requests so you can learn. Stay inside that limit and you are not billed.
           </div>
 
           {/* Grid of Providers */}
@@ -167,58 +163,45 @@ export const FreeApiModal: React.FC<Props> = ({ isOpen, onClose, onOpenConcept }
             {FREE_PROVIDERS.map((prov) => (
               <div 
                 key={prov.name} 
-                className="p-5 rounded-[24px] border flex flex-col justify-between space-y-4 transition-all bg-white hover:bg-black/[0.01] border-black/[0.06] hover:border-black/[0.12] dark:bg-[#161618] dark:hover:bg-[#1a1a1d] dark:border-white/[0.08] dark:hover:border-white/[0.14] shadow-sm hover:shadow-md"
+                className="flex flex-col justify-between gap-4 rounded-[24px] border border-rule bg-card p-6 dark:border-white/10 dark:bg-night"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-bold text-sm text-[#1d1d1f] dark:text-[#f5f5f7]">
-                      {prov.name}
-                    </h3>
-                    <span className="text-[10px] font-medium px-2.5 py-0.5 rounded-full bg-[#34c759]/15 text-[#34c759]">
-                      No Card Needed
+                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="font-display text-2xl">{prov.name}</h3>
+                    <span className="rounded-full bg-moss/15 px-3 py-1 text-sm font-semibold text-moss dark:text-mossbright">
+                      No card
                     </span>
                   </div>
-
-                  <p className="text-xs text-[#86868b] italic mb-3">
-                    "{prov.tagline}"
-                  </p>
-
-                  <div className="space-y-1.5 text-xs mb-3">
-                    <div className="p-2.5 rounded-xl border bg-black/[0.02] dark:bg-white/[0.04] border-black/[0.04] dark:border-white/[0.06]">
-                      <span className="text-[#86868b] font-medium block text-[10px] uppercase">Models:</span>
-                      <span className="text-[#1d1d1f] dark:text-[#f5f5f7] font-mono text-[11px]">{prov.models}</span>
+                  <p className="mb-4 text-lg italic text-mute">{prov.tagline}</p>
+                  <div className="mb-4 space-y-2 text-base">
+                    <div className="rounded-2xl bg-canvas px-4 py-3 dark:bg-nightcard">
+                      <span className="block text-sm font-semibold uppercase tracking-[0.12em] text-mute">Models</span>
+                      <span className="mt-1 block text-lg">{prov.models}</span>
                     </div>
-
-                    <div className="p-2.5 rounded-xl border bg-black/[0.02] dark:bg-white/[0.04] border-black/[0.04] dark:border-white/[0.06]">
-                      <span className="text-[#86868b] font-medium block text-[10px] uppercase">Free Limit:</span>
-                      <span className="text-[#34c759] font-medium text-[11px]">{prov.freeLimit}</span>
+                    <div className="rounded-2xl bg-canvas px-4 py-3 dark:bg-nightcard">
+                      <span className="block text-sm font-semibold uppercase tracking-[0.12em] text-mute">Free limit</span>
+                      <span className="mt-1 block text-lg text-moss dark:text-mossbright">{prov.freeLimit}</span>
                     </div>
                   </div>
-
-                  <div>
-                    <span className="text-[11px] font-medium text-[#6e6e73] dark:text-[#a1a1a6] block mb-1">
-                      Quick Setup:
-                    </span>
-                    <ol className="list-decimal list-inside space-y-0.5 text-[11px] text-[#86868b]">
-                      {prov.steps.map((st, i) => (
-                        <li key={i}>{st}</li>
-                      ))}
-                    </ol>
-                  </div>
+                  <p className="mb-1 text-base font-semibold">Quick setup</p>
+                  <ol className="list-decimal space-y-1 pl-5 text-base leading-relaxed text-mute">
+                    {prov.steps.map((st, i) => (
+                      <li key={i}>{st}</li>
+                    ))}
+                  </ol>
                 </div>
-
-                <div className="pt-3 border-t border-black/[0.04] dark:border-white/[0.06] flex items-center justify-between">
-                  <span className="text-[11px] text-[#86868b]">
-                    Best for: <strong className="text-[#1d1d1f] dark:text-[#f5f5f7]">{prov.bestFor}</strong>
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-rule pt-4 dark:border-white/10">
+                  <span className="text-base text-mute">
+                    Best for <strong className="text-ink dark:text-cream">{prov.bestFor}</strong>
                   </span>
                   <a
                     href={prov.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-semibold transition-all bg-[#0071e3] hover:bg-[#0077ed] text-white shadow-sm"
+                    className="inline-flex items-center gap-2 rounded-full bg-moss px-4 py-2.5 text-base font-semibold text-cream"
                   >
-                    <span>Get Key</span>
-                    <ExternalLink className="w-3 h-3" />
+                    Get a key
+                    <ExternalLink className="h-4 w-4" />
                   </a>
                 </div>
               </div>
@@ -226,13 +209,13 @@ export const FreeApiModal: React.FC<Props> = ({ isOpen, onClose, onOpenConcept }
           </div>
 
           {/* Security Rules */}
-          <div className="p-4 rounded-2xl border text-xs space-y-1.5 bg-black/[0.02] dark:bg-white/[0.03] border-black/[0.04] dark:border-white/[0.06]">
-            <span className="font-semibold text-[#1d1d1f] dark:text-white flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#34c759]" />
-              API Security Best Practice
+          <div className="space-y-2 rounded-3xl bg-canvas p-5 text-lg dark:bg-night">
+            <span className="flex items-center gap-2 font-semibold">
+              <ShieldCheck className="h-5 w-5 text-moss dark:text-mossbright" />
+              Keep the key private
             </span>
-            <p className="text-[#6e6e73] dark:text-[#a1a1a6] leading-relaxed">
-              Never commit your API keys to public GitHub repositories. Save them in a local <code className="px-1.5 py-0.5 rounded-md border bg-white dark:bg-black border-black/[0.06] dark:border-white/[0.08] font-mono text-[11px]">.env</code> file that is listed in your <code className="px-1.5 py-0.5 rounded-md border bg-white dark:bg-black border-black/[0.06] dark:border-white/[0.08] font-mono text-[11px]">.gitignore</code> so bots cannot steal your quotas.
+            <p className="leading-relaxed text-mute">
+              Keep API keys in a local <code className="rounded-md bg-card px-1.5 py-0.5 dark:bg-nightcard">.env</code> file that is listed in <code className="rounded-md bg-card px-1.5 py-0.5 dark:bg-nightcard">.gitignore</code>. A public repository will burn the free quota.
             </p>
           </div>
         </div>

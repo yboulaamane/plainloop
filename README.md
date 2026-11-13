@@ -1,4 +1,8 @@
-# 🔮 AgentAtlas (2026 Edition)
+# Plainloop
+
+An interactive field guide for learning modern AI in plain language. Large type, short lessons, and hands-on demos.
+
+Suggested Vercel project name: `plainloop` → [plainloop.vercel.app](https://plainloop.vercel.app). Checked on 13 Nov 2026: that subdomain returned `DEPLOYMENT_NOT_FOUND`, so no live project is using it. If Vercel says the name is reserved, `lucidatlas`, `primerlane`, and `lumenprimer` had the same open signal.
 
 The interactive, visual AI playground for normal users and builders—not another wall-of-text documentation website. 
 
@@ -15,13 +19,13 @@ Explore **harnesses, MCP, context engineering, swarms, RAG 2.0, memory layers, g
   3. **Interactive Mini-Demonstration**: Animated, step-by-step interactive visuals right inside the card (e.g., skill pack execution, MCP universal socket, ReAct loop stepper, swarm handoffs, guardrail scanner, AI gateway router).
   4. **Practical Relevance**: "Where would I encounter this in my AI tool?" with real-world touchpoints.
   5. **Quick Challenge**: Scenario-based question with instant explanations and celebratory confetti!
-- **"Go Deeper" Collapsible Drawer**: Technical architecture summary, source papers (RFCs, arXiv, Anthropic/OpenAI specs), implementation notes, nuance/ambiguity notes, and last-reviewed date.
+- **"Go Deeper" Collapsible Drawer**: Technical architecture summary, source papers, implementation notes, and nuance notes.
 - **"Find It in My Tool" Product Picker**: Switch between Claude, Cursor / Codex, ChatGPT, Grok, and Open Source to see how each tool names, exposes, or configures the concept.
 - **Guided Learning Paths**:
   - 💬 **I Use Chatbots** (ChatGPT, Claude, Gemini casual users)
   - 💻 **I Use Coding Assistants** (Cursor, Copilot, Codex, Claude Code)
   - 🤖 **I Want to Understand Agents** (Autonomous loops, graphs, harnesses, swarms, stateless MCP)
-  - 🧭 **Explore Everything** (All 28 concepts active)
+  - 🧭 **Explore Everything** (Every concept in the guide)
 - **Searchable Island Directory**: Full list view grouped by island for quick reference, mobile accessibility, and keyword search.
 - **Local Progress Tracking**: Tracks mastered concepts and solved challenges in your browser's local storage.
 
@@ -31,15 +35,15 @@ Explore **harnesses, MCP, context engineering, swarms, RAG 2.0, memory layers, g
 
 | Learning Island | Included Bubbles |
 | :--- | :--- |
-| **Start Here (Prerequisites)** | Foundation Models, Prompts & Tokens, Context Window, Hallucinations |
-| **Agent Architecture** | Harness, Agentic AI, Loop Engineering, Graph Engineering |
-| **Instructions & Context** | Context Engineering, Skills, Prompt Optimization |
-| **Tools & Connections** | Tool Use, Function Calling, MCP, Stateless MCP |
-| **Knowledge & Memory** | RAG 2.0, Memory Layers, Vector DBs |
-| **Agent Teamwork** | Multi-Agent Systems, Swarms |
-| **Model Adaptation** | Fine-Tuning, Synthetic Data, Distillation |
-| **Reliability & Safety** | Evaluation Frameworks, Guardrails, Observability |
-| **Deployment & Efficiency** | AI Gateways, Cost Optimization |
+| **Start Here (Prerequisites)** | Foundation Models, Prompts & Tokens, Context Window, Hallucinations, Temperature, Reasoning Models, Multimodal, Parameters |
+| **Agent Architecture** | Harness, Agentic AI, Loop Engineering, Graph Engineering, Human in the Loop, Sandbox |
+| **Instructions & Context** | Context Engineering, Skills, Prompt Optimization, System Prompt |
+| **Tools & Connections** | Tool Use, Function Calling, MCP, Stateless MCP, AI APIs, Computer Use, Structured Output |
+| **Knowledge & Memory** | RAG 2.0, Memory Layers, Vector DBs, Embeddings |
+| **Agent Teamwork** | Multi-Agent Systems, Swarms, Subagents |
+| **Model Adaptation** | Fine-Tuning, Synthetic Data, Distillation, LoRA, Quantization, RLHF, Open-Weight Models |
+| **Reliability & Safety** | Evaluation Frameworks, Guardrails, Observability, Prompt Injection |
+| **Deployment & Efficiency** | AI Gateways, Cost Optimization, Inference, Prompt Caching |
 
 ---
 
@@ -69,7 +73,7 @@ npm run preview
    git add .
    git commit -m "Initial commit: AI Concept Playground"
    git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/ai-concept-playground.git
+   git remote add origin https://github.com/yboulaamane/plainloop.git
    git push -u origin main
    ```
 

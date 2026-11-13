@@ -25,6 +25,14 @@ interface Node {
   clusterName: string;
 }
 
+function labelLines(label: string): string[] {
+  const words = label.split(' ');
+  if (words.length <= 1) return [label];
+  if (words.length === 2) return words;
+  const mid = Math.ceil(words.length / 2);
+  return [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
+}
+
 export const BubbleUniverse: React.FC<Props> = ({
   concepts,
   selectedConcept,
@@ -53,7 +61,7 @@ export const BubbleUniverse: React.FC<Props> = ({
     if (!container) return;
 
     const width = container.clientWidth || 1200;
-    const height = Math.max(640, window.innerHeight - 200);
+    const height = container.clientHeight || 760;
 
     const clusterCenters: Record<string, { x: number; y: number }> = {
       'start-here': { x: width * 0.22, y: height * 0.28 },
@@ -79,7 +87,7 @@ export const BubbleUniverse: React.FC<Props> = ({
       const initialX = existing ? existing.x : center.x + Math.cos(angle) * dist;
       const initialY = existing ? existing.y : center.y + Math.sin(angle) * dist;
 
-      const baseR = c.isImageOriginal ? 36 : c.isBeginnerPrereq ? 33 : 34;
+      const baseR = 52;
 
       return {
         concept: c,
@@ -110,7 +118,7 @@ export const BubbleUniverse: React.FC<Props> = ({
     const render = () => {
       time += 0.01;
       const width = container.clientWidth;
-      const height = Math.max(640, window.innerHeight - 200);
+      const height = container.clientHeight || 760;
 
       // Retina scaling
       const dpr = window.devicePixelRatio || 1;
@@ -139,7 +147,7 @@ export const BubbleUniverse: React.FC<Props> = ({
           n1.y += Math.cos(time + i * 1.3) * 0.14;
 
           // Boundary constraints with gentle elastic damp
-          const padding = n1.radius + 20;
+          const padding = n1.radius + 16;
           if (n1.x < padding) n1.x += (padding - n1.x) * 0.1;
           if (n1.x > width - padding) n1.x -= (n1.x - (width - padding)) * 0.1;
           if (n1.y < padding) n1.y += (padding - n1.y) * 0.1;
@@ -151,10 +159,10 @@ export const BubbleUniverse: React.FC<Props> = ({
             const dx = n2.x - n1.x;
             const dy = n2.y - n1.y;
             const dist = Math.hypot(dx, dy) || 1;
-            const minDist = n1.radius + n2.radius + 18;
+            const minDist = n1.radius + n2.radius + 14;
 
             if (dist < minDist) {
-              const force = (minDist - dist) / dist * 0.05;
+              const force = (minDist - dist) / dist * 0.08;
               const fx = dx * force;
               const fy = dy * force;
               if (draggedNodeRef.current !== n1) { n1.x -= fx; n1.y -= fy; }
@@ -232,53 +240,45 @@ export const BubbleUniverse: React.FC<Props> = ({
         ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
 
         if (isDark) {
-          ctx.fillStyle = isDimmed ? '#161618' : isHovered ? '#2c2c2e' : '#1c1c1e';
+          ctx.fillStyle = isDimmed ? '#1a1714' : isHovered ? '#2a251f' : '#221e1a';
         } else {
-          ctx.fillStyle = isDimmed ? '#e5e5ea' : isHovered ? '#ffffff' : '#ffffff';
+          ctx.fillStyle = isDimmed ? '#e7e0d4' : '#fffdf8';
         }
         ctx.fill();
 
-        // Apple Hairline Border
-        ctx.lineWidth = isHovered ? 2 : isSelected ? 2 : 1;
-        if (isHovered || isSelected) {
-          ctx.strokeStyle = isDark ? '#ffffff' : '#000000';
-        } else {
-          ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)';
-        }
+        ctx.lineWidth = isHovered || isSelected ? 3.5 : 2.5;
+        ctx.strokeStyle = isDimmed
+          ? (isDark ? 'rgba(255,255,255,0.12)' : 'rgba(28,25,21,0.12)')
+          : n.color;
         ctx.stroke();
 
-        // Minimalist Category Pill Indicator
-        if (!isDimmed) {
-          ctx.beginPath();
-          ctx.arc(n.x, n.y - n.radius * 0.52, 3, 0, Math.PI * 2);
-          ctx.fillStyle = n.color;
-          ctx.fill();
-        }
-
-        // San Francisco Typography
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = isDimmed
-          ? (isDark ? '#636366' : '#8e8e93')
-          : (isDark ? '#f5f5f7' : '#1d1d1f');
-        ctx.font = `600 ${n.radius > 35 ? '11px' : '10.5px'} -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif`;
+          ? (isDark ? '#8a8174' : '#8d8476')
+          : (isDark ? '#f6f1e7' : '#1c1915');
 
-        const words = n.concept.shortLabel.split(' ');
-        if (words.length > 1 && n.concept.shortLabel.length > 9) {
-          ctx.fillText(words[0], n.x, n.y + 1);
-          ctx.fillText(words.slice(1).join(' '), n.x, n.y + 13);
-        } else {
-          ctx.fillText(n.concept.shortLabel, n.x, n.y + 5);
+        const lines = labelLines(n.concept.shortLabel);
+        let size = 15;
+        ctx.font = `600 ${size}px "Source Sans 3", sans-serif`;
+        const widest = Math.max(...lines.map((line) => ctx.measureText(line).width));
+        if (widest > n.radius * 1.65) {
+          size = 13;
+          ctx.font = `600 ${size}px "Source Sans 3", sans-serif`;
         }
+        const lineHeight = size + 2;
+        const startY = n.y - ((lines.length - 1) * lineHeight) / 2;
+        lines.forEach((line, index) => {
+          ctx.fillText(line, n.x, startY + index * lineHeight);
+        });
 
-        // Mastered Badge
         if (!isDimmed && isMastered) {
           ctx.beginPath();
-          ctx.arc(n.x + n.radius * 0.72, n.y - n.radius * 0.72, 6, 0, Math.PI * 2);
-          ctx.fillStyle = '#34c759';
+          ctx.arc(n.x + n.radius * 0.72, n.y - n.radius * 0.72, 9, 0, Math.PI * 2);
+          ctx.fillStyle = '#1b5e45';
           ctx.fill();
-          ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold 8px -apple-system, sans-serif';
+          ctx.fillStyle = '#fffdf8';
+          ctx.font = 'bold 12px "Source Sans 3", sans-serif';
           ctx.fillText('✓', n.x + n.radius * 0.72, n.y - n.radius * 0.72 + 0.5);
         }
 
@@ -370,85 +370,64 @@ export const BubbleUniverse: React.FC<Props> = ({
     }
   }, [onSelectConcept]);
 
+  const suggested = concepts.find(
+    (c) => activePathConceptIds.includes(c.id) && !masteredIds.includes(c.id)
+  ) || concepts.find((c) => activePathConceptIds.includes(c.id)) || concepts[0];
+  const preview = hoveredConcept || suggested;
+  const previewCluster = preview ? CLUSTERS[preview.cluster] : null;
+  const previewMastered = preview ? masteredIds.includes(preview.id) : false;
+
   return (
-    <div 
-      ref={containerRef}
-      className={`relative w-full h-[640px] rounded-[32px] overflow-hidden border transition-colors duration-300 ${
-        isDark 
-          ? 'apple-bg-dark border-white/[0.08]' 
-          : 'apple-bg-light border-black/[0.06] shadow-sm'
-      }`}
-    >
-      <canvas
-        ref={canvasRef}
-        onMouseMove={handleMouseMove}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onClick={handleCanvasClick}
-        className="w-full h-full relative z-10 block touch-none"
-      />
-
-      {/* Apple-style Frosted Tooltip */}
-      {hoveredConcept && (
-        <div 
-          className={`absolute z-20 pointer-events-none p-4 rounded-2xl border apple-glass max-w-xs transition-opacity duration-150 ${
-            isDark 
-              ? 'apple-card-dark text-[#f5f5f7]' 
-              : 'apple-card-light text-[#1d1d1f]'
-          }`}
-          style={{
-            left: Math.min(mousePosRef.current.x + 16, (containerRef.current?.clientWidth || 800) - 280),
-            top: Math.max(16, mousePosRef.current.y - 40),
-          }}
+    <div className="space-y-4">
+      <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div
+          ref={containerRef}
+          className="panel relative h-[680px] overflow-hidden lg:h-[760px]"
         >
-          <div className="flex items-center gap-2 mb-1">
-            <span 
-              className="w-2 h-2 rounded-full" 
-              style={{ backgroundColor: CLUSTERS[hoveredConcept.cluster]?.color || '#0071e3' }} 
-            />
-            <span className="text-xs font-semibold tracking-tight">{hoveredConcept.title}</span>
-          </div>
-          <p className="text-[11px] leading-relaxed line-clamp-2 text-[#86868b] dark:text-[#a1a1a6]">
-            {hoveredConcept.plainExplanation}
-          </p>
-          <div className="mt-2.5 pt-2 border-t border-black/[0.06] dark:border-white/[0.1] flex items-center justify-between text-[10px] font-medium text-[#86868b]">
-            <span>Click to expand</span>
-            <span className="font-semibold text-[#1d1d1f] dark:text-[#f5f5f7]">{CLUSTERS[hoveredConcept.cluster]?.name}</span>
-          </div>
-        </div>
-      )}
-
-      {/* Apple Clean Pill Overlay at Bottom */}
-      <div className="absolute bottom-5 left-5 right-5 z-20 flex flex-wrap items-center justify-between pointer-events-none gap-2">
-        <div className={`px-4 py-1.5 rounded-full border text-xs font-medium pointer-events-auto apple-glass ${
-          isDark 
-            ? 'bg-black/60 border-white/[0.1] text-[#a1a1a6]' 
-            : 'bg-white/80 border-black/[0.06] text-[#6e6e73] shadow-sm'
-        }`}>
-          <span>Click any pebble to explore • Drag with inertia</span>
+          <canvas
+            ref={canvasRef}
+            onMouseMove={handleMouseMove}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onClick={handleCanvasClick}
+            className="relative z-10 block h-full w-full touch-none"
+          />
         </div>
 
-        <div className={`hidden md:flex items-center gap-4 px-4 py-1.5 rounded-full border text-xs font-medium pointer-events-auto apple-glass ${
-          isDark 
-            ? 'bg-black/60 border-white/[0.1] text-[#a1a1a6]' 
-            : 'bg-white/80 border-black/[0.06] text-[#6e6e73] shadow-sm'
-        }`}>
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0071e3]" /> Basics
+        {preview && previewCluster && (
+          <aside className="panel flex flex-col p-6">
+            <p className="kicker">{hoveredConcept ? 'In view' : 'Suggested next'}</p>
+            <div className="mt-4 flex items-center gap-2 text-base font-semibold text-mute">
+              <span className="h-3 w-3 rounded-full" style={{ backgroundColor: previewCluster.color }} />
+              {previewCluster.name}
+              {previewMastered && <span className="text-moss dark:text-mossbright">· Learned</span>}
+            </div>
+            <h2 className="font-display mt-3 text-4xl leading-tight">{preview.title}</h2>
+            <p className="mt-4 flex-1 text-lg leading-relaxed text-mute">{preview.plainExplanation}</p>
+            <p className="mt-4 text-lg italic">{preview.analogy.headline}</p>
+            <button
+              onClick={() => onSelectConcept(preview)}
+              className="mt-6 rounded-full bg-moss px-5 py-3 text-lg font-semibold text-cream"
+            >
+              Open the lesson
+            </button>
+          </aside>
+        )}
+      </div>
+
+      <p className="text-lg text-mute">
+        Hover a circle to preview it. Click to open the lesson. Drag to rearrange.
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {Object.values(CLUSTERS).map((cluster) => (
+          <span
+            key={cluster.id}
+            className="inline-flex items-center gap-2 rounded-full border border-rule bg-card px-3 py-1.5 text-base text-mute dark:border-white/10 dark:bg-nightcard"
+          >
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: cluster.color }} />
+            {cluster.name}
           </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#af52de]" /> Agents
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#34c759]" /> Tools & MCP
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#ff9500]" /> Memory
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#ff2d55]" /> Safety
-          </span>
-        </div>
+        ))}
       </div>
     </div>
   );

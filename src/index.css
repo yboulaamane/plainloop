@@ -3,88 +3,73 @@
 @tailwind utilities;
 
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color-scheme: light;
+  font-family: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  font-size: 18px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code, pre, .font-mono {
-  font-family: "SF Mono", "JetBrains Mono", Menlo, Monaco, Consolas, monospace;
-}
-
-/* Apple Theme Colors */
 html.dark {
   color-scheme: dark;
-  background-color: #000000;
-  color: #f5f5f7;
 }
 
-html:not(.dark) {
-  color-scheme: light;
-  background-color: #f5f5f7;
-  color: #1d1d1f;
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #f3eee4;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 0% -10%, rgba(27, 94, 69, 0.1), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 100% 0%, rgba(154, 74, 43, 0.08), transparent 50%);
+  color: #1c1915;
 }
 
-/* Apple Squircle & Glass Surfaces */
-.apple-glass {
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+html.dark body {
+  background-color: #12110f;
+  background-image:
+    radial-gradient(ellipse 70% 45% at 0% 0%, rgba(61, 154, 114, 0.14), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(154, 74, 43, 0.12), transparent 48%);
+  color: #f6f1e7;
 }
 
-.apple-card-light {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+.font-display {
+  font-family: Fraunces, "Iowan Old Style", Palatino, serif;
+  font-optical-sizing: auto;
 }
 
-.apple-card-dark {
-  background: rgba(28, 28, 30, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+code, pre, .font-mono {
+  font-family: "IBM Plex Mono", "Source Sans 3", ui-monospace, monospace;
 }
 
-/* Subtle Apple Grid */
-.apple-bg-light {
-  background-color: #f5f5f7;
-  background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-  background-size: 28px 28px;
+::selection {
+  background: #1b5e45;
+  color: #fffdf8;
 }
 
-.apple-bg-dark {
-  background-color: #000000;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-/* Apple Smooth Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
+::-webkit-scrollbar-thumb {
+  background: rgba(28, 25, 21, 0.22);
+  border-radius: 9999px;
+}
+
 html.dark ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 9999px;
+  background: rgba(246, 241, 231, 0.22);
 }
 
-html.dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.28);
-}
+@layer components {
+  .panel {
+    @apply rounded-[28px] border border-rule bg-card text-ink shadow-card dark:border-white/10 dark:bg-nightcard dark:text-cream;
+  }
 
-html:not(.dark) ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.16);
-  border-radius: 9999px;
-}
-
-html:not(.dark) ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.28);
-}
-
-/* Apple Spring transitions */
-.transition-spring {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  .kicker {
+    @apply text-sm font-semibold uppercase tracking-[0.18em] text-moss dark:text-mossbright;
+  }
 }

@@ -8,16 +8,15 @@ import { BubbleUniverse } from './components/BubbleUniverse';
 import { ListView } from './components/ListView';
 import { ConceptModal } from './components/ConceptModal';
 import { FreeApiModal } from './components/FreeApiModal';
-import { RefreshCw, Gift } from 'lucide-react';
+import { RefreshCw, Gift, ExternalLink } from 'lucide-react';
 
 export function App() {
   const [activeView, setActiveView] = useState<'map' | 'list'>('map');
   const [selectedConcept, setSelectedConcept] = useState<Concept | null>(null);
-  const [selectedPathId, setSelectedPathId] = useState<LearningPathId>('all');
+  const [selectedPathId, setSelectedPathId] = useState<LearningPathId>('chatbots');
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
   const [isFreeApiModalOpen, setIsFreeApiModalOpen] = useState<boolean>(false);
 
-  // Theme state: dark or light
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     try {
       const saved = localStorage.getItem('agentatlas_theme');
@@ -28,7 +27,6 @@ export function App() {
     }
   });
 
-  // Apply theme class to document
   useEffect(() => {
     const root = document.documentElement;
     if (theme === 'dark') {
@@ -47,7 +45,6 @@ export function App() {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
-  // Local storage state for progress tracking
   const [masteredIds, setMasteredIds] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem('agentatlas_mastered');
@@ -66,7 +63,6 @@ export function App() {
     }
   });
 
-  // Save to localStorage
   useEffect(() => {
     try {
       localStorage.setItem('agentatlas_mastered', JSON.stringify(masteredIds));
@@ -104,14 +100,10 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col transition-colors duration-300 bg-[#f5f5f7] text-[#1d1d1f] dark:bg-[#000000] dark:text-[#f5f5f7] selection:bg-[#0071e3] selection:text-white">
-      {/* Top Header */}
+    <div id="top" className="flex min-h-screen flex-col text-ink dark:text-cream">
       <Navbar
         activeView={activeView}
         onToggleView={setActiveView}
-        learningPaths={LEARNING_PATHS}
-        selectedPathId={selectedPathId}
-        onSelectPath={setSelectedPathId}
         reducedMotion={reducedMotion}
         onToggleMotion={() => setReducedMotion(!reducedMotion)}
         masteredCount={masteredIds.length}
@@ -122,63 +114,45 @@ export function App() {
         onToggleTheme={toggleTheme}
       />
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
-        {/* Curated Learning Path Banner */}
+      <main className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-5 py-6 sm:px-8 sm:py-8">
+        <section className="max-w-3xl">
+          <p className="kicker">Interactive field guide</p>
+          <h1 className="font-display mt-2 text-5xl leading-[1.02] tracking-tight text-ink dark:text-cream sm:text-6xl">
+            Learn AI without the jargon.
+          </h1>
+          <p className="mt-4 text-xl leading-relaxed text-mute">
+            {CONCEPTS.length} ideas, from prompts to agent swarms. Each lesson is plain words, an analogy, a hands-on demo, where you will meet it, and one check.
+          </p>
+        </section>
+
         <LearningPathBanner
-          currentPath={currentPath}
+          paths={LEARNING_PATHS}
+          selectedPathId={selectedPathId}
           onSelectPath={setSelectedPathId}
-          activeCount={activePathConceptIds.length}
-          totalCount={CONCEPTS.length}
         />
 
-        {/* View Switcher Container */}
         {activeView === 'map' ? (
-          <div className="space-y-4">
-            <BubbleUniverse
-              concepts={CONCEPTS}
-              selectedConcept={selectedConcept}
-              onSelectConcept={setSelectedConcept}
-              activePathConceptIds={activePathConceptIds}
-              reducedMotion={reducedMotion}
-              masteredIds={masteredIds}
-              challengeSolvedIds={challengeSolvedIds}
-              theme={theme}
-            />
-
-            {/* Minimalist Cards Below Map */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-xs">
-              <div className="p-4 rounded-2xl apple-card-light dark:apple-card-dark transition-all">
-                <span className="font-semibold text-[#1d1d1f] dark:text-[#f5f5f7] block mb-1">Explore Floating Nodes</span>
-                <p className="text-[#86868b] dark:text-[#a1a1a6] leading-relaxed">
-                  Click any bubble to view 5-part cards: plain-language explanation, everyday analogy, animated demo, real-world context, and challenge.
-                </p>
-              </div>
-              <div className="p-4 rounded-2xl apple-card-light dark:apple-card-dark transition-all">
-                <span className="font-semibold text-[#1d1d1f] dark:text-[#f5f5f7] block mb-1">Tool Comparison Engine</span>
-                <p className="text-[#86868b] dark:text-[#a1a1a6] leading-relaxed">
-                  Switch between Claude, Cursor/Codex, ChatGPT, Grok, and Open Source to see how each tool exposes the underlying concept.
-                </p>
-              </div>
-              <div className="p-4 rounded-2xl apple-card-light dark:apple-card-dark transition-all">
-                <span className="font-semibold text-[#1d1d1f] dark:text-[#f5f5f7] block mb-1">Zero Cost & Client-Side</span>
-                <p className="text-[#86868b] dark:text-[#a1a1a6] leading-relaxed">
-                  100% private, runs offline in your browser without requiring logins, accounts, or live API keys.
-                </p>
-              </div>
-            </div>
-          </div>
+          <BubbleUniverse
+            concepts={CONCEPTS}
+            selectedConcept={selectedConcept}
+            onSelectConcept={setSelectedConcept}
+            activePathConceptIds={activePathConceptIds}
+            reducedMotion={reducedMotion}
+            masteredIds={masteredIds}
+            challengeSolvedIds={challengeSolvedIds}
+            theme={theme}
+          />
         ) : (
           <ListView
             concepts={CONCEPTS}
             onSelectConcept={setSelectedConcept}
             masteredIds={masteredIds}
             challengeSolvedIds={challengeSolvedIds}
+            activePathConceptIds={activePathConceptIds}
           />
         )}
       </main>
 
-      {/* Modal / Card overlay */}
       {selectedConcept && (
         <ConceptModal
           concept={selectedConcept}
@@ -192,7 +166,6 @@ export function App() {
         />
       )}
 
-      {/* Free APIs Modal Guide */}
       <FreeApiModal
         isOpen={isFreeApiModalOpen}
         onClose={() => setIsFreeApiModalOpen(false)}
@@ -202,50 +175,45 @@ export function App() {
         }}
       />
 
-      {/* Footer */}
-      <footer className="mt-12 border-t transition-colors bg-white/70 dark:bg-[#121214]/70 border-black/[0.06] dark:border-white/[0.08] backdrop-blur-xl py-8 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#86868b] dark:text-[#a1a1a6]">
-          <div className="flex items-center gap-3">
-            <div className="w-6 h-6 rounded-full bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-bold text-[10px]">
-              AI
-            </div>
-            <div>
-              <p className="font-semibold text-[#1d1d1f] dark:text-[#f5f5f7]">
-                AI Playground • Interactive visual guide for modern AI & autonomous systems
-              </p>
-              <p className="text-[11px] text-[#86868b] dark:text-[#a1a1a6]">
-                Covering the complete 2026 landscape: Harnesses, MCP, Loop Engineering, Swarms, RAG 2.0 & Free APIs.
-              </p>
-            </div>
+      <footer className="mt-8 border-t border-rule bg-card/70 py-8 dark:border-white/10 dark:bg-nightcard/70">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 text-base text-mute sm:px-8 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="font-display text-2xl text-ink dark:text-cream">Plainloop</p>
+            <p className="mt-1 max-w-xl">
+              Harnesses, MCP, memory, swarms, and the rest of the 2026 map, written so you can learn them in one sitting.
+            </p>
           </div>
-
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <button
               onClick={() => setIsFreeApiModalOpen(true)}
-              className="font-medium text-[#1d1d1f] dark:text-[#f5f5f7] hover:underline transition-colors flex items-center gap-1"
+              className="inline-flex items-center gap-2 font-semibold text-ink hover:text-moss dark:text-cream dark:hover:text-mossbright"
             >
-              <Gift className="w-3.5 h-3.5 text-[#34c759]" />
-              Free APIs Guide
+              <Gift className="h-4 w-4" />
+              Free APIs
             </button>
-            <span className="text-black/10 dark:text-white/10">|</span>
             {(masteredIds.length > 0 || challengeSolvedIds.length > 0) && (
-              <>
-                <button
-                  onClick={handleResetProgress}
-                  className="flex items-center gap-1 hover:text-[#ff3b30] transition-colors"
-                  title="Reset localStorage progress"
-                >
-                  <RefreshCw className="w-3 h-3" />
-                  Reset Progress
-                </button>
-                <span className="text-black/10 dark:text-white/10">|</span>
-              </>
+              <button
+                onClick={handleResetProgress}
+                className="inline-flex items-center gap-2 hover:text-clay"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Reset progress
+              </button>
             )}
-            <span>Reviewed November 2026</span>
+            <a
+              href="https://yboulaamane.github.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-semibold text-ink hover:text-moss dark:text-cream dark:hover:text-mossbright"
+            >
+              yboulaamane.github.io
+              <ExternalLink className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </footer>
     </div>
   );
 }
+
 export default App;

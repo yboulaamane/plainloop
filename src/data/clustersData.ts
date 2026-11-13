@@ -99,7 +99,11 @@ export const LEARNING_PATHS: LearningPath[] = [
       'multi-agent-systems', 'swarms',
       'fine-tuning', 'synthetic-data', 'distillation',
       'eval-frameworks', 'guardrails', 'observability',
-      'ai-gateways', 'cost-optimization', 'ai-apis'
+      'ai-gateways', 'cost-optimization', 'ai-apis',
+      'temperature', 'system-prompt', 'reasoning-models', 'multimodal', 'parameters',
+      'embeddings', 'inference', 'lora', 'quantization', 'rlhf', 'open-weights',
+      'subagents', 'prompt-injection', 'computer-use', 'structured-output',
+      'human-in-the-loop', 'prompt-caching', 'sandbox'
     ],
   },
   {
@@ -107,20 +111,20 @@ export const LEARNING_PATHS: LearningPath[] = [
     title: 'Chatbots',
     description: 'Essential concepts for daily users of ChatGPT, Claude, and Gemini.',
     icon: 'MessageSquare',
-    conceptIds: ['models', 'prompts-tokens', 'context-window', 'hallucinations', 'rag-2', 'memory-layers', 'guardrails', 'prompt-optimization', 'ai-apis'],
+    conceptIds: ['models', 'prompts-tokens', 'context-window', 'hallucinations', 'rag-2', 'memory-layers', 'guardrails', 'prompt-optimization', 'ai-apis', 'temperature', 'system-prompt', 'reasoning-models', 'multimodal', 'parameters'],
   },
   {
     id: 'coding-assistants',
     title: 'Coding Assistants',
     description: 'Master how tools like Cursor, Copilot, Codex, and Claude Code operate under the hood.',
     icon: 'Code',
-    conceptIds: ['context-engineering', 'skills', 'tool-use', 'function-calling', 'mcp', 'harness', 'ai-apis', 'observability'],
+    conceptIds: ['context-engineering', 'skills', 'tool-use', 'function-calling', 'mcp', 'harness', 'ai-apis', 'observability', 'system-prompt', 'structured-output', 'computer-use', 'sandbox', 'prompt-caching'],
   },
   {
     id: 'agents',
     title: 'Agents & Loops',
     description: 'Demystify autonomous agent loops, graphs, harnesses, swarms, and stateless MCP.',
     icon: 'Bot',
-    conceptIds: ['agentic-ai', 'harness', 'loop-engineering', 'graph-engineering', 'mcp', 'stateless-mcp', 'multi-agent-systems', 'swarms'],
+    conceptIds: ['agentic-ai', 'harness', 'loop-engineering', 'graph-engineering', 'mcp', 'stateless-mcp', 'multi-agent-systems', 'swarms', 'subagents', 'computer-use', 'human-in-the-loop', 'sandbox'],
   },
 ];

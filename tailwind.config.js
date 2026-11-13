@@ -7,37 +7,26 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"Source Sans 3"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Fraunces', '"Iowan Old Style"', 'Palatino', 'serif'],
+      },
       colors: {
-        brand: {
-          50: '#f0f7ff',
-          100: '#e0effe',
-          200: '#bae0fd',
-          300: '#7cc7fb',
-          400: '#36abf7',
-          500: '#0c8fe9',
-          600: '#0171c7',
-          700: '#025aa1',
-          800: '#064d85',
-          900: '#0b416f',
-          950: '#072a4a',
-        },
+        canvas: '#f3eee4',
+        card: '#fffdf8',
+        ink: '#1c1915',
+        mute: '#5e574c',
+        rule: '#e3d9c6',
+        moss: '#1b5e45',
+        mossbright: '#3d9a72',
+        clay: '#9a4a2b',
+        night: '#12110f',
+        nightcard: '#1d1a16',
+        cream: '#f6f1e7',
       },
-      animation: {
-        'float-slow': 'float 7s ease-in-out infinite',
-        'float-medium': 'float 5s ease-in-out infinite',
-        'float-fast': 'float 3.5s ease-in-out infinite',
-        'pulse-subtle': 'pulseSubtle 3s ease-in-out infinite',
+      boxShadow: {
+        card: '0 18px 40px -28px rgba(28, 25, 21, 0.45)',
       },
-      keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-8px)' },
-        },
-        pulseSubtle: {
-          '0%, 100%': { opacity: '0.85', transform: 'scale(1)' },
-          '50%': { opacity: '1', transform: 'scale(1.03)' },
-        }
-      }
     },
   },
   plugins: [],
