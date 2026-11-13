@@ -11,7 +11,10 @@ import { FreeApiModal } from './components/FreeApiModal';
 import { RefreshCw, Gift, ExternalLink } from 'lucide-react';
 
 export function App() {
-  const [activeView, setActiveView] = useState<'map' | 'list'>('map');
+  // On a phone the list is easier to use than the map, so start there.
+  const [activeView, setActiveView] = useState<'map' | 'list'>(() =>
+    typeof window !== 'undefined' && window.matchMedia?.('(max-width: 640px)').matches ? 'list' : 'map'
+  );
   const [selectedConcept, setSelectedConcept] = useState<Concept | null>(null);
   const [selectedPathId, setSelectedPathId] = useState<LearningPathId>('chatbots');
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
@@ -93,14 +96,14 @@ export function App() {
   };
 
   const handleResetProgress = () => {
-    if (window.confirm('Reset all learned concepts and quiz progress?')) {
+    if (window.confirm('Clear everything you marked as learned or checked?')) {
       setMasteredIds([]);
       setChallengeSolvedIds([]);
     }
   };
 
   return (
-    <div id="top" className="flex min-h-screen flex-col text-ink dark:text-cream">
+    <div id="top" className="flex min-h-screen flex-col text-ink">
       <Navbar
         activeView={activeView}
         onToggleView={setActiveView}
@@ -114,15 +117,35 @@ export function App() {
         onToggleTheme={toggleTheme}
       />
 
-      <main className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-5 py-6 sm:px-8 sm:py-8">
-        <section className="max-w-3xl">
-          <p className="kicker">Interactive field guide</p>
-          <h1 className="font-display mt-2 text-5xl leading-[1.02] tracking-tight text-ink dark:text-cream sm:text-6xl">
+      <main className="mx-auto w-full max-w-7xl flex-1 space-y-8 px-4 py-8 sm:px-8 sm:py-10">
+        <section className="max-w-4xl">
+          <h1 className="font-display text-5xl leading-[1.02] tracking-tight sm:text-7xl">
             Learn AI without the jargon.
           </h1>
-          <p className="mt-4 text-xl leading-relaxed text-mute">
-            {CONCEPTS.length} ideas, from prompts to agent swarms. Each lesson is plain words, an analogy, a hands-on demo, where you will meet it, and one check.
+          <p className="mt-5 max-w-3xl text-xl leading-relaxed sm:text-2xl sm:leading-relaxed">
+            You heard a word like <strong>harness</strong>, <strong>swarm</strong>, or <strong>MCP</strong> and nobody explained it.
+            Here are {CONCEPTS.length} of those words. Each one gets plain words, a picture, and a small machine you can poke until it makes sense.
           </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button
+              type="button"
+              className="key key-accent px-5 text-lg"
+              onClick={() => {
+                const first = CONCEPTS.find((c) => c.id === 'harness');
+                if (first) setSelectedConcept(first);
+              }}
+            >
+              Start with “harness”
+            </button>
+            <button
+              type="button"
+              className="key px-5 text-lg"
+              onClick={() => setActiveView(activeView === 'map' ? 'list' : 'map')}
+            >
+              {activeView === 'map' ? 'See every lesson as a list' : 'See the lessons as a map'}
+            </button>
+          </div>
+          <div className="ticks mt-8" aria-hidden="true" />
         </section>
 
         <LearningPathBanner
@@ -175,28 +198,20 @@ export function App() {
         }}
       />
 
-      <footer className="mt-8 border-t border-rule bg-card/70 py-8 dark:border-white/10 dark:bg-nightcard/70">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 text-base text-mute sm:px-8 md:flex-row md:items-center md:justify-between">
+      <footer className="mt-10 border-t-2 border-ink bg-sheet py-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 text-lg sm:px-8 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="font-display text-2xl text-ink dark:text-cream">Plainloop</p>
-            <p className="mt-1 max-w-xl">
-              Harnesses, MCP, memory, swarms, and the rest of the 2026 map, written so you can learn them in one sitting.
-            </p>
+            <p className="font-display text-3xl leading-none">Plainloop</p>
+            <p className="mt-2 font-semibold">AI in plain terms.</p>
           </div>
-          <div className="flex flex-wrap items-center gap-4">
-            <button
-              onClick={() => setIsFreeApiModalOpen(true)}
-              className="inline-flex items-center gap-2 font-semibold text-ink hover:text-moss dark:text-cream dark:hover:text-mossbright"
-            >
-              <Gift className="h-4 w-4" />
+          <div className="flex flex-wrap items-center gap-3">
+            <button type="button" onClick={() => setIsFreeApiModalOpen(true)} className="key">
+              <Gift className="h-5 w-5" aria-hidden="true" />
               Free APIs
             </button>
             {(masteredIds.length > 0 || challengeSolvedIds.length > 0) && (
-              <button
-                onClick={handleResetProgress}
-                className="inline-flex items-center gap-2 hover:text-clay"
-              >
-                <RefreshCw className="h-4 w-4" />
+              <button type="button" onClick={handleResetProgress} className="key">
+                <RefreshCw className="h-5 w-5" aria-hidden="true" />
                 Reset progress
               </button>
             )}
@@ -204,10 +219,10 @@ export function App() {
               href="https://yboulaamane.github.io"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 font-semibold text-ink hover:text-moss dark:text-cream dark:hover:text-mossbright"
+              className="key"
             >
               yboulaamane.github.io
-              <ExternalLink className="h-4 w-4" />
+              <ExternalLink className="h-5 w-5" aria-hidden="true" />
             </a>
           </div>
         </div>

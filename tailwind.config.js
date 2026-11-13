@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const v = (name) => `rgb(var(--${name}) / <alpha-value>)`;
+
 export default {
   content: [
     "./index.html",
@@ -10,22 +12,23 @@ export default {
       fontFamily: {
         sans: ['"Source Sans 3"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         display: ['Fraunces', '"Iowan Old Style"', 'Palatino', 'serif'],
+        mono: ['"IBM Plex Mono"', 'ui-monospace', 'Menlo', 'monospace'],
       },
+      // One set of names for the whole site. The values live in index.css
+      // and flip for the dark workbench, so components never need `dark:`.
       colors: {
-        canvas: '#f3eee4',
-        card: '#fffdf8',
-        ink: '#1c1915',
-        mute: '#5e574c',
-        rule: '#e3d9c6',
-        moss: '#1b5e45',
-        mossbright: '#3d9a72',
-        clay: '#9a4a2b',
-        night: '#12110f',
-        nightcard: '#1d1a16',
-        cream: '#f6f1e7',
+        bench: v('bench'),     // the workbench the paper sits on
+        sheet: v('sheet'),     // paper
+        ink: v('ink'),         // text, borders, the pressed side of a key
+        soft: v('soft'),       // second-voice text, still easy to read
+        rule: v('rule'),       // pencil lines
+        accent: v('accent'),   // the one strong colour: lit, live, chosen
+        onaccent: v('onaccent'),
+        edge: v('edge'),       // the thickness under a key
       },
       boxShadow: {
-        card: '0 18px 40px -28px rgba(28, 25, 21, 0.45)',
+        sheet: '6px 6px 0 0 rgb(var(--ink) / 0.14)',
+        key: '0 4px 0 0 rgb(var(--edge))',
       },
     },
   },

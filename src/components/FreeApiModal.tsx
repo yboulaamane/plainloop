@@ -110,112 +110,94 @@ export const FreeApiModal: React.FC<Props> = ({ isOpen, onClose, onOpenConcept }
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-ink/50 p-3 backdrop-blur-sm sm:p-6"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/55 p-2 sm:p-6"
       onClick={onClose}
     >
       <div
-        className="panel relative my-4 flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden"
+        className="sheet relative my-2 flex w-full max-w-5xl flex-col sm:my-4"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="free-api-title"
       >
-        <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-3 border-b border-rule bg-card/95 px-6 py-5 backdrop-blur dark:border-white/10 dark:bg-nightcard/95 sm:px-8">
+        <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-3 rounded-t-[4px] border-b-2 border-ink bg-sheet px-3 py-3 sm:px-8">
+          <p className="flex items-center gap-2 text-lg font-bold">
+            <Gift className="h-5 w-5" aria-hidden="true" /> Free APIs
+          </p>
           <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-moss/15 text-moss dark:text-mossbright">
-              <Gift className="h-6 w-6" />
-            </span>
-            <div>
-              <h2 id="free-api-title" className="font-display text-3xl leading-tight">
-                Free APIs to practice with
-              </h2>
-              <p className="mt-1 text-lg text-mute">
-                Places you can try models without a credit card.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={() => { onClose(); onOpenConcept(); }}
-              className="hidden items-center gap-2 rounded-full border border-rule px-4 py-2.5 text-base font-semibold sm:flex dark:border-white/10"
+              className="key hidden sm:inline-flex"
             >
               Open the lesson
-              <Sparkles className="h-4 w-4 text-moss dark:text-mossbright" />
+              <Sparkles className="h-5 w-5" aria-hidden="true" />
             </button>
-            <button
-              onClick={onClose}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-rule text-mute dark:border-white/10"
-              aria-label="Close"
-            >
-              <X className="h-5 w-5" />
+            <button type="button" onClick={onClose} className="key key-round" aria-label="Close">
+              <X className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         </div>
 
-        <div className="flex-1 space-y-6 overflow-y-auto px-6 py-6 sm:px-8">
-          <div className="rounded-3xl bg-canvas p-5 text-lg leading-relaxed text-mute dark:bg-night">
-            <strong className="block text-xl text-ink dark:text-cream">How a free tier works</strong>
-            Labs give you a limited number of requests so you can learn. Stay inside that limit and you are not billed.
-          </div>
+        <div className="space-y-8 px-3 py-7 sm:px-8 sm:py-10">
+          <header className="max-w-3xl">
+            <h2 id="free-api-title" className="font-display text-5xl leading-[1.05] tracking-tight">
+              Free APIs to practice with
+            </h2>
+            <p className="mt-4 text-xl leading-relaxed">
+              An API is how a program talks to a model. These places let you try one without a credit card.
+              Each gives you a limited number of requests. Stay inside that limit and you are not billed.
+            </p>
+            <div className="ticks mt-6" aria-hidden="true" />
+          </header>
 
-          {/* Grid of Providers */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             {FREE_PROVIDERS.map((prov) => (
-              <div 
-                key={prov.name} 
-                className="flex flex-col justify-between gap-4 rounded-[24px] border border-rule bg-card p-6 dark:border-white/10 dark:bg-night"
-              >
+              <div key={prov.name} className="flex flex-col justify-between gap-5 rounded-md border-2 border-ink p-4 sm:p-5">
                 <div>
-                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="font-display text-2xl">{prov.name}</h3>
-                    <span className="rounded-full bg-moss/15 px-3 py-1 text-sm font-semibold text-moss dark:text-mossbright">
-                      No card
-                    </span>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="font-display text-3xl leading-tight">{prov.name}</h3>
+                    <span className="tab tab-accent">No card</span>
                   </div>
-                  <p className="mb-4 text-lg italic text-mute">{prov.tagline}</p>
-                  <div className="mb-4 space-y-2 text-base">
-                    <div className="rounded-2xl bg-canvas px-4 py-3 dark:bg-nightcard">
-                      <span className="block text-sm font-semibold uppercase tracking-[0.12em] text-mute">Models</span>
-                      <span className="mt-1 block text-lg">{prov.models}</span>
+                  <p className="mt-2 text-lg leading-snug">{prov.tagline}</p>
+                  <dl className="mt-4 space-y-3 text-lg">
+                    <div>
+                      <dt className="font-bold">Models</dt>
+                      <dd>{prov.models}</dd>
                     </div>
-                    <div className="rounded-2xl bg-canvas px-4 py-3 dark:bg-nightcard">
-                      <span className="block text-sm font-semibold uppercase tracking-[0.12em] text-mute">Free limit</span>
-                      <span className="mt-1 block text-lg text-moss dark:text-mossbright">{prov.freeLimit}</span>
+                    <div>
+                      <dt className="font-bold">Free limit</dt>
+                      <dd>{prov.freeLimit}</dd>
                     </div>
-                  </div>
-                  <p className="mb-1 text-base font-semibold">Quick setup</p>
-                  <ol className="list-decimal space-y-1 pl-5 text-base leading-relaxed text-mute">
+                    <div>
+                      <dt className="font-bold">Good for</dt>
+                      <dd>{prov.bestFor}</dd>
+                    </div>
+                  </dl>
+                  <p className="mt-4 text-lg font-bold">How to start</p>
+                  <ol className="mt-1 list-decimal space-y-1 pl-6 text-lg leading-relaxed">
                     {prov.steps.map((st, i) => (
                       <li key={i}>{st}</li>
                     ))}
                   </ol>
                 </div>
-                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-rule pt-4 dark:border-white/10">
-                  <span className="text-base text-mute">
-                    Best for <strong className="text-ink dark:text-cream">{prov.bestFor}</strong>
-                  </span>
-                  <a
-                    href={prov.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full bg-moss px-4 py-2.5 text-base font-semibold text-cream"
-                  >
-                    Get a key
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </div>
+                <a href={prov.url} target="_blank" rel="noopener noreferrer" className="key key-accent self-start">
+                  Get a key
+                  <ExternalLink className="h-5 w-5" aria-hidden="true" />
+                </a>
               </div>
             ))}
           </div>
 
-          {/* Security Rules */}
-          <div className="space-y-2 rounded-3xl bg-canvas p-5 text-lg dark:bg-night">
-            <span className="flex items-center gap-2 font-semibold">
-              <ShieldCheck className="h-5 w-5 text-moss dark:text-mossbright" />
+          <div className="max-w-3xl border-l-[6px] border-accent pl-4 text-xl">
+            <p className="flex items-center gap-2 font-bold">
+              <ShieldCheck className="h-6 w-6" aria-hidden="true" />
               Keep the key private
-            </span>
-            <p className="leading-relaxed text-mute">
-              Keep API keys in a local <code className="rounded-md bg-card px-1.5 py-0.5 dark:bg-nightcard">.env</code> file that is listed in <code className="rounded-md bg-card px-1.5 py-0.5 dark:bg-nightcard">.gitignore</code>. A public repository will burn the free quota.
+            </p>
+            <p className="mt-2 leading-relaxed">
+              A key is a password. Keep it in a local <code className="rounded-sm border-2 border-ink/30 px-1.5">.env</code> file
+              that is listed in <code className="rounded-sm border-2 border-ink/30 px-1.5">.gitignore</code>. If it ends up in a public
+              place, strangers will use up your free limit.
             </p>
           </div>
         </div>

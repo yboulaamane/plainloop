@@ -3,10 +3,7 @@ import confetti from 'canvas-confetti';
 import { Concept, ToolExample } from '../types';
 import { CLUSTERS } from '../data/clustersData';
 import { ConceptVisualDemo } from './visuals/ConceptVisualDemo';
-import {
-  X, Lightbulb, CheckCircle2, AlertTriangle, ArrowRight,
-  BookOpen, Wrench, Check,
-} from 'lucide-react';
+import { X, AlertTriangle, ArrowRight, Check } from 'lucide-react';
 
 interface Props {
   concept: Concept;
@@ -26,6 +23,12 @@ const TOOLS: { id: ToolExample['platform']; name: string }[] = [
   { id: 'grok', name: 'Grok' },
   { id: 'opensource', name: 'Open source' },
 ];
+
+const STATUS_WORDS: Record<ToolExample['status'], string> = {
+  supported: 'It has this',
+  partial: 'It partly has this',
+  'not-applicable': 'Not really a thing here',
+};
 
 export const ConceptModal: React.FC<Props> = ({
   concept,
@@ -52,6 +55,14 @@ export const ConceptModal: React.FC<Props> = ({
     setIsGoDeeperOpen(false);
   }, [concept.id]);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
   const handleSelectOption = (index: number) => {
     setSelectedQuizOption(index);
     setIsQuizSubmitted(true);
@@ -61,7 +72,7 @@ export const ConceptModal: React.FC<Props> = ({
         particleCount: 48,
         spread: 60,
         origin: { y: 0.75 },
-        colors: ['#1b5e45', '#f6f1e7', '#9a4a2b'],
+        colors: ['#c93a18', '#1b1814', '#fbf7ec'],
       });
     }
   };
@@ -76,142 +87,117 @@ export const ConceptModal: React.FC<Props> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-ink/50 p-3 backdrop-blur-sm sm:p-6"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/55 p-2 sm:p-6"
       onClick={onClose}
     >
       <div
-        className="panel relative my-4 flex w-full max-w-4xl flex-col overflow-hidden"
+        className="sheet relative my-2 flex w-full max-w-5xl flex-col sm:my-4"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="lesson-title"
       >
-        <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-3 border-b border-rule bg-card/95 px-6 py-4 backdrop-blur dark:border-white/10 dark:bg-nightcard/95 sm:px-8">
-          <span className={`rounded-full border px-3 py-1 text-sm font-semibold ${cluster.badgeBg}`}>
-            {cluster.name}
-          </span>
-          <div className="flex items-center gap-2">
+        <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-3 rounded-t-[4px] border-b-2 border-ink bg-sheet px-3 py-3 sm:px-8">
+          <p className="text-lg font-bold leading-tight">{cluster.name}</p>
+          <div className="flex items-center gap-3">
             <button
+              type="button"
+              aria-pressed={isMastered}
               onClick={() => onToggleMastered(concept.id)}
-              className={`flex items-center gap-2 rounded-full px-4 py-2 text-base font-semibold ${
-                isMastered
-                  ? 'bg-moss text-cream'
-                  : 'border border-rule text-ink hover:border-moss dark:border-white/10 dark:text-cream'
-              }`}
+              className="key"
             >
-              <Check className="h-4 w-4" />
+              <Check className="h-5 w-5" aria-hidden="true" />
               {isMastered ? 'Learned' : 'Mark learned'}
             </button>
-            <button
-              onClick={onClose}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-rule text-mute hover:text-ink dark:border-white/10 dark:hover:text-cream"
-              aria-label="Close lesson"
-            >
-              <X className="h-5 w-5" />
+            <button type="button" onClick={onClose} className="key key-round" aria-label="Close lesson">
+              <X className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         </div>
 
-        <div className="space-y-8 overflow-y-auto px-6 py-7 sm:px-8 sm:py-9">
+        <div className="space-y-10 px-3 py-7 sm:px-8 sm:py-10">
           <header>
-            <h2 id="lesson-title" className="font-display text-4xl leading-tight sm:text-5xl">
+            <h2 id="lesson-title" className="font-display text-5xl leading-[1.05] tracking-tight sm:text-6xl">
               {concept.title}
             </h2>
-            <p className="mt-3 text-lg text-mute">{cluster.tagline}</p>
+            <div className="ticks mt-5" aria-hidden="true" />
           </header>
 
-          <div className="grid grid-cols-1 gap-2 rounded-full border border-rule p-1 dark:border-white/10 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2" role="group" aria-label="Parts of this lesson">
             <button
+              type="button"
+              aria-pressed={activeTab === 'understand'}
               onClick={() => setActiveTab('understand')}
-              className={`flex items-center justify-center gap-2 rounded-full px-4 py-3 text-base font-semibold ${
-                activeTab === 'understand'
-                  ? 'bg-ink text-cream dark:bg-cream dark:text-ink'
-                  : 'text-mute'
-              }`}
+              className="key text-lg"
             >
-              <Lightbulb className="h-5 w-5" />
               The lesson
             </button>
             <button
+              type="button"
+              aria-pressed={activeTab === 'tools'}
               onClick={() => setActiveTab('tools')}
-              className={`flex items-center justify-center gap-2 rounded-full px-4 py-3 text-base font-semibold ${
-                activeTab === 'tools'
-                  ? 'bg-ink text-cream dark:bg-cream dark:text-ink'
-                  : 'text-mute'
-              }`}
+              className="key text-lg"
             >
-              <Wrench className="h-5 w-5" />
               Find it in your tool
             </button>
           </div>
 
           {activeTab === 'understand' ? (
-            <div className="space-y-6">
-              <section className="rounded-3xl bg-canvas p-6 dark:bg-night">
-                <p className="kicker">01 · Plain words</p>
-                <p className="mt-3 text-xl leading-relaxed">{concept.plainExplanation}</p>
-              </section>
-
-              <section className="rounded-3xl border border-clay/20 bg-clay/5 p-6">
-                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-clay">
-                  02 · {concept.analogy.headline}
-                </p>
-                <p className="mt-3 text-xl leading-relaxed">
-                  {concept.analogy.story}
+            <div className="space-y-10">
+              <section className="max-w-3xl">
+                <p className="tab">In plain words</p>
+                <p className="mt-4 text-xl leading-relaxed sm:text-2xl sm:leading-relaxed" data-plain-words>
+                  {concept.plainExplanation}
                 </p>
               </section>
 
-              <section>
-                <p className="kicker mb-3">03 · Try it</p>
-                <ConceptVisualDemo type={concept.visualType} conceptId={concept.id} conceptTitle={concept.title} />
+              <section className="max-w-3xl border-l-[6px] border-accent pl-4 sm:pl-6">
+                <p className="tab">Picture it</p>
+                <p className="mt-3 font-display text-2xl leading-snug sm:text-3xl">{concept.analogy.headline}</p>
+                <p className="mt-3 text-xl leading-relaxed">{concept.analogy.story}</p>
               </section>
 
-              <section className="rounded-3xl bg-canvas p-6 dark:bg-night">
-                <p className="kicker">04 · Where you will meet this</p>
-                <p className="mt-3 text-xl font-semibold">{concept.practicalRelevance.whereEncountered}</p>
-                <p className="mt-3 text-lg leading-relaxed text-mute">
-                  {concept.practicalRelevance.realWorldExample}
-                </p>
+              <ConceptVisualDemo type={concept.visualType} conceptId={concept.id} conceptTitle={concept.title} />
+
+              <section className="max-w-3xl">
+                <p className="tab">Where you will meet this</p>
+                <p className="mt-4 text-xl font-bold leading-snug">{concept.practicalRelevance.whereEncountered}</p>
+                <p className="mt-3 text-xl leading-relaxed">{concept.practicalRelevance.realWorldExample}</p>
               </section>
 
-              <section className="rounded-3xl border border-rule p-6 dark:border-white/10">
-                <div className="mb-3 flex items-center justify-between gap-3">
-                  <p className="kicker flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4" />
-                    05 · One check
-                  </p>
+              <section className="rounded-md border-2 border-ink p-4 sm:p-6">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="tab">One check</p>
                   {isChallengeSolved && (
-                    <span className="rounded-full bg-moss/10 px-3 py-1 text-sm font-semibold text-moss dark:text-mossbright">
-                      Checked
+                    <span className="tab tab-accent">
+                      <Check className="mr-1 h-4 w-4" aria-hidden="true" /> Checked
                     </span>
                   )}
                 </div>
-                <p className="text-lg italic text-mute">{concept.quickChallenge.scenario}</p>
-                <p className="mt-2 text-xl font-semibold">{concept.quickChallenge.question}</p>
-                <div className="mt-4 space-y-3">
+                <p className="mt-4 text-xl leading-relaxed">{concept.quickChallenge.scenario}</p>
+                <p className="mt-2 font-display text-2xl leading-snug">{concept.quickChallenge.question}</p>
+                <div className="mt-5 space-y-4">
                   {concept.quickChallenge.options.map((option, idx) => {
                     const isSelected = selectedQuizOption === idx;
-                    let optionStyle = 'border-rule bg-card hover:border-moss dark:border-white/10 dark:bg-nightcard';
-                    if (isQuizSubmitted) {
-                      if (option.isCorrect) {
-                        optionStyle = 'border-moss bg-moss/10';
-                      } else if (isSelected) {
-                        optionStyle = 'border-clay bg-clay/10';
-                      }
-                    }
+                    const showRight = isQuizSubmitted && option.isCorrect;
+                    const showWrong = isQuizSubmitted && isSelected && !option.isCorrect;
                     return (
                       <div key={idx}>
                         <button
+                          type="button"
                           onClick={() => handleSelectOption(idx)}
-                          className={`flex w-full items-start gap-3 rounded-2xl border px-4 py-4 text-left text-lg ${optionStyle}`}
+                          className={`key w-full justify-start text-left text-lg font-semibold ${
+                            showRight ? 'border-accent bg-accent/15' : ''
+                          } ${showWrong ? 'border-dashed' : ''}`}
                         >
-                          <span className="font-display text-xl text-moss dark:text-mossbright">
-                            {String.fromCharCode(65 + idx)}
+                          <span className="font-mono text-xl" aria-hidden="true">
+                            {showRight ? '✓' : showWrong ? '✗' : String.fromCharCode(65 + idx)}
                           </span>
-                          <span>{option.text}</span>
+                          <span className={showWrong ? 'line-through' : ''}>{option.text}</span>
                         </button>
                         {isQuizSubmitted && isSelected && (
-                          <p className={`mt-2 rounded-2xl px-4 py-3 text-base ${option.isCorrect ? 'bg-moss/10 text-moss dark:text-mossbright' : 'bg-clay/10 text-clay'}`}>
+                          <p className={`pop mt-3 border-l-[6px] pl-4 text-lg leading-relaxed ${option.isCorrect ? 'border-accent' : 'border-ink'}`}>
+                            <strong>{option.isCorrect ? 'Yes. ' : 'Not this one. '}</strong>
                             {option.explanation}
                           </p>
                         )}
@@ -221,98 +207,93 @@ export const ConceptModal: React.FC<Props> = ({
                 </div>
               </section>
 
-              <section className="overflow-hidden rounded-3xl border border-rule dark:border-white/10">
+              <section className="rounded-md border-2 border-ink">
                 <button
+                  type="button"
+                  aria-expanded={isGoDeeperOpen}
                   onClick={() => setIsGoDeeperOpen(!isGoDeeperOpen)}
-                  className="flex w-full items-center justify-between px-6 py-4 text-left text-lg font-semibold"
+                  className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left text-xl font-bold sm:px-6"
                 >
-                  <span className="flex items-center gap-2">
-                    <BookOpen className="h-5 w-5 text-mute" />
-                    Go deeper
-                  </span>
-                  <span className="text-base font-medium text-mute">{isGoDeeperOpen ? 'Hide' : 'Show sources'}</span>
+                  <span>Go deeper, with the technical words</span>
+                  <span className="font-mono text-2xl" aria-hidden="true">{isGoDeeperOpen ? '−' : '+'}</span>
                 </button>
                 {isGoDeeperOpen && (
-                  <div className="space-y-5 border-t border-rule px-6 py-5 text-lg dark:border-white/10">
-                    <p className="leading-relaxed text-mute">{concept.goDeeper.technicalSummary}</p>
+                  <div className="space-y-5 border-t-2 border-ink px-4 py-5 text-lg sm:px-6">
+                    <p className="leading-relaxed">{concept.goDeeper.technicalSummary}</p>
                     {concept.goDeeper.nuanceOrAmbiguity && (
-                      <div className="rounded-2xl border border-clay/30 bg-clay/5 p-4">
-                        <p className="flex items-center gap-2 font-semibold text-clay">
-                          <AlertTriangle className="h-4 w-4" />
-                          A nuance worth knowing
+                      <div className="border-l-[6px] border-accent pl-4">
+                        <p className="flex items-center gap-2 font-bold">
+                          <AlertTriangle className="h-5 w-5" aria-hidden="true" />
+                          One thing people mix up
                         </p>
-                        <p className="mt-2 text-base leading-relaxed">{concept.goDeeper.nuanceOrAmbiguity}</p>
+                        <p className="mt-2 leading-relaxed">{concept.goDeeper.nuanceOrAmbiguity}</p>
                       </div>
                     )}
-                    <div className="space-y-2">
-                      {concept.goDeeper.sources.map((src, i) => (
-                        <div key={i} className="rounded-2xl bg-canvas px-4 py-3 dark:bg-night">
-                          <p className="font-semibold">{src.title}</p>
-                          {src.description && <p className="mt-1 text-base text-mute">{src.description}</p>}
-                        </div>
-                      ))}
+                    <div>
+                      <p className="font-bold">Where this comes from</p>
+                      <ul className="mt-2 space-y-2">
+                        {concept.goDeeper.sources.map((src, i) => (
+                          <li key={i} className="rounded-md border-2 border-ink/30 px-4 py-3">
+                            <p className="font-bold">{src.title}</p>
+                            {src.description && <p className="mt-1">{src.description}</p>}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
                 )}
               </section>
             </div>
           ) : (
-            <div className="space-y-5">
-              <p className="text-xl leading-relaxed text-mute">
+            <div className="space-y-6">
+              <p className="max-w-3xl text-xl leading-relaxed">
                 The same idea wears a different name in each tool. Pick yours.
               </p>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
                 {TOOLS.map((tool) => (
                   <button
                     key={tool.id}
+                    type="button"
+                    aria-pressed={selectedTool === tool.id}
                     onClick={() => setSelectedTool(tool.id)}
-                    className={`rounded-2xl px-3 py-4 text-base font-semibold ${
-                      selectedTool === tool.id
-                        ? 'bg-ink text-cream dark:bg-cream dark:text-ink'
-                        : 'border border-rule bg-card text-mute hover:text-ink dark:border-white/10 dark:bg-nightcard dark:hover:text-cream'
-                    }`}
+                    className="key"
                   >
                     {tool.name}
                   </button>
                 ))}
               </div>
-              <div className="rounded-3xl border border-rule p-6 dark:border-white/10">
+              <div className="rounded-md border-2 border-ink p-4 sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <h3 className="font-display text-3xl">{activeToolExample.platformName}</h3>
-                  <span className={`rounded-full px-3 py-1 text-sm font-semibold uppercase tracking-wide ${
-                    activeToolExample.status === 'supported'
-                      ? 'bg-moss/15 text-moss dark:text-mossbright'
-                      : activeToolExample.status === 'partial'
-                      ? 'bg-clay/15 text-clay'
-                      : 'bg-canvas text-mute dark:bg-night'
-                  }`}>
-                    {activeToolExample.status}
+                  <span className={`tab ${activeToolExample.status === 'supported' ? 'tab-accent' : ''}`}>
+                    {STATUS_WORDS[activeToolExample.status]}
                   </span>
                 </div>
-                <p className="mt-3 text-lg">
-                  Look for <span className="font-semibold">{activeToolExample.featureName}</span>
+                <p className="mt-4 text-xl">
+                  Look for <strong>{activeToolExample.featureName}</strong>
                 </p>
-                <p className="mt-3 text-lg leading-relaxed text-mute">{activeToolExample.description}</p>
-                <p className="mt-4 rounded-2xl bg-canvas px-4 py-3 text-base dark:bg-night">
-                  <span className="block text-sm font-semibold uppercase tracking-[0.14em] text-mute">Where to find it</span>
-                  <span className="mt-1 block font-medium">{activeToolExample.howToFind}</span>
-                </p>
+                <p className="mt-3 text-xl leading-relaxed">{activeToolExample.description}</p>
+                <div className="mt-5 border-l-[6px] border-accent pl-4 text-lg">
+                  <p className="font-bold">Where to find it</p>
+                  <p className="mt-1">{activeToolExample.howToFind}</p>
+                </div>
               </div>
             </div>
           )}
 
           {connectedConcepts.length > 0 && (
-            <div className="border-t border-rule pt-6 dark:border-white/10">
-              <p className="text-base font-semibold uppercase tracking-[0.14em] text-mute">Continue with</p>
-              <div className="mt-3 flex flex-wrap gap-2">
+            <div className="border-t-2 border-ink pt-6">
+              <p className="text-xl font-bold">Continue with</p>
+              <div className="mt-4 flex flex-wrap gap-3">
                 {connectedConcepts.map((item) => (
                   <button
                     key={item.id}
+                    type="button"
                     onClick={() => onSelectConcept(item)}
-                    className="inline-flex items-center gap-2 rounded-full border border-rule px-4 py-2 text-base font-semibold hover:border-moss dark:border-white/10"
+                    className="key"
                   >
                     {item.title}
-                    <ArrowRight className="h-4 w-4 text-mute" />
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </button>
                 ))}
               </div>

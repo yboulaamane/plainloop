@@ -158,7 +158,7 @@ export const PLAYGROUNDS: Record<string, Playground> = {
     choices: [
       {
         label: 'No skill',
-        lines: ['You retype the rules: features, fixes, who did it, link the PR.', 'Miss one rule and the notes come out wrong.'],
+        lines: ['You retype the rules: features, fixes, who did it, link to the change.', 'Miss one rule and the notes come out wrong.'],
         so: 'Repeating yourself is fragile.',
       },
       {
@@ -628,7 +628,7 @@ export const PLAYGROUNDS: Record<string, Playground> = {
       },
       {
         label: 'Send a helper',
-        lines: ['A subagent reads only the log.', 'It reports back: "the failure is a missing mock on line 40."', 'The lead keeps editing.'],
+        lines: ['A subagent reads only the log.', 'It reports back: "it breaks on line 40. One test part is missing."', 'The lead keeps editing.'],
         so: 'A subagent is a helper with its own scratch space. It reports to the lead.',
       },
     ],
