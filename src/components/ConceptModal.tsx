@@ -186,7 +186,7 @@ export const ConceptModal: React.FC<Props> = ({
                         <button
                           type="button"
                           onClick={() => handleSelectOption(idx)}
-                          className={`key w-full justify-start text-left text-lg font-semibold ${
+                          className={`key w-full justify-start text-left text-lg font-semibold ${isQuizSubmitted ? 'key-quiet' : ''} ${
                             showRight ? 'border-accent bg-accent/15' : ''
                           } ${showWrong ? 'border-dashed' : ''}`}
                         >
