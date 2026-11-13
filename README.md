@@ -1,33 +1,36 @@
 # Plainloop
 
-An interactive field guide for learning modern AI in plain language. Large type, short lessons, and hands-on demos.
+AI in plain terms. A beginner's guide to AI jargon: large type, short lessons, and a small machine to poke in every one.
 
 Suggested Vercel project name: `plainloop` → [plainloop.vercel.app](https://plainloop.vercel.app). Checked on 13 Nov 2026: that subdomain returned `DEPLOYMENT_NOT_FOUND`, so no live project is using it. If Vercel says the name is reserved, `lucidatlas`, `primerlane`, and `lumenprimer` had the same open signal.
 
-The interactive, visual AI playground for normal users and builders—not another wall-of-text documentation website. 
+It is for someone who just heard "harness," "swarm," or "MCP" and still does not know what the word means. They are not engineers.
 
-Explore **harnesses, MCP, context engineering, swarms, RAG 2.0, memory layers, guardrails, and loop engineering** through floating organic bubbles, 5-part lesson cards, animated interactive mini-simulations, relatable analogies, and tool-by-tool comparisons.
+## What a lesson is
 
----
+1. **Plain words.** Two or three sentences, first thing on the page, in large type.
+2. **Picture it.** One everyday comparison.
+3. **Try it.** A small machine you can poke. Touching it changes what is on screen, and one plain sentence underneath says what just happened.
+4. **Where you will meet this.**
+5. **One check.** A single question.
 
-## 🌟 What This Feels Like
+There is also a "Find it in your tool" view per lesson, a map of every lesson, a searchable list, and progress kept in the browser's local storage.
 
-- **Floating Bubble Universe**: Gently drifting connected bubbles arranged into thematic learning islands. Drag them around, hover to see architecture links, or toggle reduced motion.
-- **The 5-Part Lesson Format** (teach what a concept *helps you do* before its architecture):
-  1. **Plain-Language Explanation**: 2–3 sentences with zero unexplained jargon.
-  2. **Relatable Analogy**: Everyday metaphors (e.g. "A chef's specialty recipe card", "A universal USB-C cable for AI", "The airplane flight data recorder").
-  3. **Interactive Mini-Demonstration**: Animated, step-by-step interactive visuals right inside the card (e.g., skill pack execution, MCP universal socket, ReAct loop stepper, swarm handoffs, guardrail scanner, AI gateway router).
-  4. **Practical Relevance**: "Where would I encounter this in my AI tool?" with real-world touchpoints.
-  5. **Quick Challenge**: Scenario-based question with instant explanations and celebratory confetti!
-- **"Go Deeper" Collapsible Drawer**: Technical architecture summary, source papers, implementation notes, and nuance notes.
-- **"Find It in My Tool" Product Picker**: Switch between Claude, Cursor / Codex, ChatGPT, Grok, and Open Source to see how each tool names, exposes, or configures the concept.
-- **Guided Learning Paths**:
-  - 💬 **I Use Chatbots** (ChatGPT, Claude, Gemini casual users)
-  - 💻 **I Use Coding Assistants** (Cursor, Copilot, Codex, Claude Code)
-  - 🤖 **I Want to Understand Agents** (Autonomous loops, graphs, harnesses, swarms, stateless MCP)
-  - 🧭 **Explore Everything** (Every concept in the guide)
-- **Searchable Island Directory**: Full list view grouped by island for quick reference, mobile accessibility, and keyword search.
-- **Local Progress Tracking**: Tracks mastered concepts and solved challenges in your browser's local storage.
+## The look
+
+One object: paper on a workbench. Ink, one accent colour for whatever is lit or chosen, big type, and keys that visibly go down when pressed. The colours and the shared parts (`.key`, `.sheet`, `.tab`, `.slip`, `.lamp`, `.lever`, `.ticks`) live in `src/index.css` and `tailwind.config.js`. Components never use `dark:` classes; the dark workbench is the same names with different values.
+
+## The playgrounds
+
+Every lesson has its own toy. They live in `src/components/visuals/`:
+
+- `playgrounds.ts` holds the words: the "ask" and the lesson of each of its two choices.
+- `toys.ts` says which machine acts those words out, and holds the setup for machines that several lessons share.
+- `kit.tsx` holds the parts every machine is built from: keys, levers, lamps, slips, meters, and a slip you can drag.
+- `machines/` holds the machines. `named.tsx` has the harness rig, the chat tape, the dial, the MCP plug, the hidden-sentence page, and the drag-to-hand-off desks. `generic.tsx` has machines shared by a few lessons (gate, form, picker, loop, grid, map). `oneoffs1.tsx` and `oneoffs2.tsx` have the one-of-a-kind toys.
+- `ConceptVisualDemo.tsx` is the frame: the ask, the Reset key, and the machine.
+
+Rules every toy keeps: click and keyboard both work, the chosen control looks selected, Reset returns to the start, the before and the after are both visible, and the sentence under the toy adds no new jargon.
 
 ---
 
@@ -35,7 +38,7 @@ Explore **harnesses, MCP, context engineering, swarms, RAG 2.0, memory layers, g
 
 | Learning Island | Included Bubbles |
 | :--- | :--- |
-| **Start Here (Prerequisites)** | Foundation Models, Prompts & Tokens, Context Window, Hallucinations, Temperature, Reasoning Models, Multimodal, Parameters |
+| **Start Here** | Foundation Models, Prompts & Tokens, Context Window, Hallucinations, Temperature, Reasoning Models, Multimodal, Parameters |
 | **Agent Architecture** | Harness, Agentic AI, Loop Engineering, Graph Engineering, Human in the Loop, Sandbox |
 | **Instructions & Context** | Context Engineering, Skills, Prompt Optimization, System Prompt |
 | **Tools & Connections** | Tool Use, Function Calling, MCP, Stateless MCP, AI APIs, Computer Use, Structured Output |
@@ -88,17 +91,20 @@ npm run preview
 
 ## ✏️ How to Edit or Add Concepts
 
-All content lives cleanly inside structured TypeScript files—**no interface code rewrites required**:
-- `src/data/conceptsData.ts`: Holds explanations, analogies, challenges, tool examples, and Go Deeper drawers.
-- `src/data/clustersData.ts`: Holds island definitions and guided paths.
-- `src/types.ts`: TypeScript definitions ensuring strong type safety.
+All content lives in structured TypeScript files:
+- `src/data/conceptsData.ts`: explanations, analogies, the check, tool notes, and the "Go deeper" drawer.
+- `src/data/clustersData.ts`: the groups and the guided paths.
+- `src/components/visuals/playgrounds.ts` and `toys.ts`: the words and the setup of each playground.
+- `src/types.ts`: TypeScript definitions.
+
+To add a lesson, add it to `conceptsData.ts`, give it an entry in `playgrounds.ts`, and point it at a machine in `toys.ts`. If an existing machine fits the idea (a dial, a gate, a form), only data is needed.
 
 ---
 
 ## 🛠️ Tech Stack
 
 - **Framework**: React 19 + TypeScript + Vite 6
-- **Styling**: Tailwind CSS + Custom Glassmorphism & Cyber Halos
+- **Styling**: Tailwind CSS, with the site's own tokens and parts in `src/index.css`
 - **Icons**: Lucide Icons
-- **Animation & Physics**: HTML5 Canvas Spring & Force Repulsion Simulation
+- **Map**: an HTML5 canvas with a small spring-and-spacing simulation
 - **Effects**: Canvas Confetti

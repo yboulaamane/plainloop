@@ -2,8 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Plainloop is one object: paper on a workbench.
+  Cool drafting paper, ink for words and edges, one green for whatever is lit or chosen,
+  and keys that visibly go down when you press them.
+*/
 :root {
   color-scheme: light;
+  --bench: 222 226 220;
+  --sheet: 247 248 244;
+  --ink: 21 24 26;
+  --soft: 66 73 75;
+  --rule: 192 199 190;
+  --accent: 8 120 63;
+  --onaccent: 247 248 244;
+  --edge: 21 24 26;
   font-family: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
   font-size: 18px;
   -webkit-font-smoothing: antialiased;
@@ -12,24 +25,23 @@
 
 html.dark {
   color-scheme: dark;
+  --bench: 16 19 18;
+  --sheet: 27 32 31;
+  --ink: 236 240 233;
+  --soft: 186 194 187;
+  --rule: 58 66 63;
+  --accent: 62 214 128;
+  --onaccent: 10 20 15;
+  --edge: 109 120 115;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #f3eee4;
-  background-image:
-    radial-gradient(ellipse 80% 50% at 0% -10%, rgba(27, 94, 69, 0.1), transparent 55%),
-    radial-gradient(ellipse 55% 40% at 100% 0%, rgba(154, 74, 43, 0.08), transparent 50%);
-  color: #1c1915;
-}
-
-html.dark body {
-  background-color: #12110f;
-  background-image:
-    radial-gradient(ellipse 70% 45% at 0% 0%, rgba(61, 154, 114, 0.14), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(154, 74, 43, 0.12), transparent 48%);
-  color: #f6f1e7;
+  background-color: rgb(var(--bench));
+  background-image: radial-gradient(rgb(var(--ink) / 0.13) 1px, transparent 1.3px);
+  background-size: 22px 22px;
+  color: rgb(var(--ink));
 }
 
 .font-display {
@@ -38,38 +50,160 @@ html.dark body {
 }
 
 code, pre, .font-mono {
-  font-family: "IBM Plex Mono", "Source Sans 3", ui-monospace, monospace;
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
 }
 
 ::selection {
-  background: #1b5e45;
-  color: #fffdf8;
+  background: rgb(var(--accent));
+  color: rgb(var(--onaccent));
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+:focus-visible {
+  outline: 3px solid rgb(var(--accent));
+  outline-offset: 3px;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(28, 25, 21, 0.22);
-  border-radius: 9999px;
-}
-
-html.dark ::-webkit-scrollbar-thumb {
-  background: rgba(246, 241, 231, 0.22);
-}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgb(var(--ink) / 0.3); border-radius: 2px; }
 
 @layer components {
-  .panel {
-    @apply rounded-[28px] border border-rule bg-card text-ink shadow-card dark:border-white/10 dark:bg-nightcard dark:text-cream;
+  /* A sheet of paper lying on the bench. */
+  .sheet {
+    @apply rounded-md border-2 border-ink bg-sheet text-ink shadow-sheet;
   }
 
-  .kicker {
-    @apply text-sm font-semibold uppercase tracking-[0.18em] text-moss dark:text-mossbright;
+  /* An index tab: the only kind of label on the site. Ink, never gray. */
+  .tab {
+    @apply inline-flex items-center rounded-sm bg-ink px-2.5 py-1 text-base font-bold leading-tight text-sheet;
   }
+  .tab-accent {
+    @apply bg-accent text-onaccent;
+  }
+
+  /* A key. It has thickness, and it goes down. */
+  .key {
+    @apply relative inline-flex min-h-[48px] cursor-pointer select-none items-center justify-center gap-2 rounded-lg border-2 border-ink bg-sheet px-4 py-2 text-base font-bold leading-tight text-ink shadow-key;
+    transition: transform 70ms ease-out, box-shadow 70ms ease-out, background-color 120ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .key:hover:not(:disabled):not([aria-pressed='true']):not([aria-checked='true']):not(.key-accent) {
+    background-color: rgb(var(--accent) / 0.16);
+  }
+  .key:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 0 rgb(var(--edge));
+  }
+  .key[aria-pressed='true'],
+  .key[aria-checked='true'],
+  .key[aria-current='true'] {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 0 rgb(var(--edge));
+    background-color: rgb(var(--ink));
+    color: rgb(var(--sheet));
+  }
+  .key:disabled {
+    cursor: not-allowed;
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 0 rgb(var(--edge));
+    opacity: 0.45;
+  }
+  .key-accent {
+    @apply bg-accent text-onaccent;
+  }
+  .key-accent:hover:not(:disabled) {
+    background-color: rgb(var(--accent) / 0.86);
+  }
+  .key-round {
+    @apply h-[48px] w-[48px] rounded-full px-0;
+  }
+
+  /* A slip of paper that a machine prints. */
+  .slip {
+    @apply rounded-md border-2 border-ink bg-sheet px-4 py-3 text-lg leading-snug text-ink;
+  }
+  .slip-live {
+    @apply border-accent;
+    box-shadow: inset 6px 0 0 0 rgb(var(--accent));
+  }
+  .slip-dead {
+    @apply border-dashed text-soft;
+  }
+
+  /* A small lamp. Lit means: this is live right now. */
+  .lamp {
+    @apply inline-block h-4 w-4 shrink-0 rounded-full border-2 border-ink bg-sheet align-middle;
+    transition: background-color 150ms, box-shadow 150ms;
+  }
+  .lamp-on {
+    @apply bg-accent;
+    box-shadow: 0 0 0 4px rgb(var(--accent) / 0.28);
+  }
+
+  /* A two-position lever. */
+  .lever {
+    @apply inline-flex min-h-[48px] cursor-pointer select-none items-center gap-3 rounded-lg text-left text-base font-bold leading-tight text-ink;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lever-track {
+    @apply relative h-[36px] w-[68px] shrink-0 rounded-full border-2 border-ink bg-sheet;
+    transition: background-color 140ms;
+  }
+  .lever-knob {
+    @apply absolute left-[3px] top-[3px] h-[26px] w-[26px] rounded-full bg-ink;
+    transition: transform 140ms ease-out, background-color 140ms;
+  }
+  .lever[aria-checked='true'] .lever-track {
+    @apply bg-accent;
+  }
+  .lever[aria-checked='true'] .lever-knob {
+    @apply bg-onaccent;
+    transform: translateX(32px);
+  }
+
+  /* Graph paper for the face of an instrument. */
+  .grid-paper {
+    background-image:
+      linear-gradient(rgb(var(--ink) / 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--ink) / 0.07) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* Ruler ticks. The site's one ornament. */
+  .ticks {
+    height: 14px;
+    background-image:
+      linear-gradient(90deg, rgb(var(--ink)) 2px, transparent 2px),
+      linear-gradient(90deg, rgb(var(--ink) / 0.6) 1px, transparent 1px);
+    background-size: 55px 14px, 11px 7px;
+    background-repeat: repeat-x;
+  }
+
+  /* A place in a machine where something can sit. */
+  .well {
+    @apply rounded-md border-2 border-dashed border-ink/50 p-3;
+  }
+
+  .drag-slip {
+    @apply cursor-grab touch-none select-none rounded-md border-2 border-ink bg-accent px-3 py-2 text-left text-base font-bold leading-snug text-onaccent shadow-key;
+  }
+  .drag-slip:active { @apply cursor-grabbing; }
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: translateY(6px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes shake {
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+.pop { animation: pop 180ms ease-out both; }
+.shake { animation: shake 260ms ease-in-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pop, .shake { animation: none; }
+  .key, .lever-knob, .lever-track, .lamp { transition: none; }
 }

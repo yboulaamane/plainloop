@@ -9,10 +9,10 @@ interface Props {
 }
 
 const ICONS: Record<LearningPathId, React.ReactNode> = {
-  all: <Compass className="h-6 w-6" />,
-  chatbots: <MessageSquare className="h-6 w-6" />,
-  'coding-assistants': <Code className="h-6 w-6" />,
-  agents: <Bot className="h-6 w-6" />,
+  all: <Compass className="h-6 w-6" aria-hidden="true" />,
+  chatbots: <MessageSquare className="h-6 w-6" aria-hidden="true" />,
+  'coding-assistants': <Code className="h-6 w-6" aria-hidden="true" />,
+  agents: <Bot className="h-6 w-6" aria-hidden="true" />,
 };
 
 export const LearningPathBanner: React.FC<Props> = ({
@@ -21,34 +21,26 @@ export const LearningPathBanner: React.FC<Props> = ({
   onSelectPath,
 }) => {
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      {paths.map((path) => {
-        const selected = path.id === selectedPathId;
-        return (
+    <section aria-label="Pick a path">
+      <p className="text-xl font-bold">Pick where to start.</p>
+      <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {paths.map((path) => (
           <button
             key={path.id}
+            type="button"
+            aria-pressed={path.id === selectedPathId}
             onClick={() => onSelectPath(path.id)}
-            className={`flex h-full flex-col items-start gap-3 rounded-[28px] border p-5 text-left transition ${
-              selected
-                ? 'border-moss bg-moss text-cream shadow-card'
-                : 'border-rule bg-card text-ink hover:-translate-y-0.5 hover:border-moss/40 dark:border-white/10 dark:bg-nightcard dark:text-cream'
-            }`}
+            className="key h-full flex-col items-start justify-start gap-2 p-4 text-left"
           >
-            <span className={selected ? 'text-cream' : 'text-moss dark:text-mossbright'}>
+            <span className="flex items-center gap-3">
               {ICONS[path.id]}
+              <span className="font-display text-2xl leading-tight">{path.title}</span>
             </span>
-            <span>
-              <span className="font-display block text-2xl leading-tight">{path.title}</span>
-              <span className={`mt-2 block text-base leading-snug ${selected ? 'text-cream/90' : 'text-mute'}`}>
-                {path.description}
-              </span>
-            </span>
-            <span className={`mt-auto text-sm font-semibold uppercase tracking-[0.14em] ${selected ? 'text-cream/80' : 'text-moss dark:text-mossbright'}`}>
-              {path.conceptIds.length} lessons
-            </span>
+            <span className="text-base font-normal leading-snug">{path.description}</span>
+            <span className="mt-auto font-mono text-base font-semibold">{path.conceptIds.length} lessons</span>
           </button>
-        );
-      })}
-    </div>
+        ))}
+      </div>
+    </section>
   );
 };
