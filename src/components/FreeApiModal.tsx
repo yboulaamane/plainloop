@@ -18,89 +18,91 @@ interface FreeProvider {
   steps: string[];
 }
 
+// Kept free of model names and exact limits on purpose: both change often.
+// Each card says what the place is good for and where to check today's numbers.
 const FREE_PROVIDERS: FreeProvider[] = [
   {
-    name: 'Google AI Studio (Gemini)',
-    tagline: 'The most generous official free tier from a frontier lab',
-    models: 'Gemini 1.5 Flash & Gemini 1.5 Pro',
-    freeLimit: '15 Requests Per Minute (RPM), 1M context, 1,500 req/day',
+    name: 'Google AI Studio',
+    tagline: 'Free API keys for Google\'s Gemini models',
+    models: 'Google\'s current Gemini models, including fast and larger ones',
+    freeLimit: 'A daily and per-minute limit. The current numbers are on Google\'s pricing page.',
     creditCardRequired: false,
-    bestFor: 'Multimodal apps, reading full PDFs, huge 1M contexts',
+    bestFor: 'Reading long documents, images, and PDFs',
     url: 'https://aistudio.google.com/',
     steps: [
-      'Sign in at aistudio.google.com with your Google account',
-      'Click "Get API Key" in the left sidebar',
-      'Click "Create API Key" (Takes 5 seconds, no credit card)'
+      'Sign in at aistudio.google.com with a Google account',
+      'Choose "Get API key"',
+      'Create a key. No credit card is needed for the free tier'
     ]
   },
   {
-    name: 'Groq Cloud',
-    tagline: 'Record-setting inference speed (500+ tokens/sec) on LPUs',
-    models: 'Llama 3.3 70B, Mixtral 8x7B, Gemma 2',
-    freeLimit: 'Generous free developer quota with sub-second latency',
+    name: 'Groq',
+    tagline: 'Very fast replies from open models, on Groq\'s own chips',
+    models: 'A rotating list of open models, shown in the Groq console',
+    freeLimit: 'A free developer tier with rate limits. The console shows yours.',
     creditCardRequired: false,
-    bestFor: 'Real-time conversational agents, high-speed coding',
+    bestFor: 'Chat apps where speed matters',
     url: 'https://console.groq.com/',
     steps: [
-      'Sign up at console.groq.com with GitHub or Google',
-      'Navigate to API Keys > "Create API Key"',
-      'Use the OpenAI-compatible endpoint `https://api.groq.com/openai/v1`'
+      'Sign up at console.groq.com',
+      'Open API Keys and create a key',
+      'Groq works with OpenAI-style code: point it at https://api.groq.com/openai/v1'
     ]
   },
   {
-    name: 'OpenRouter (Free Catalog)',
-    tagline: 'Unified gateway providing zero-cost open models',
-    models: 'DeepSeek R1, Llama 3.3 70B, Mistral (`:free` models)',
-    freeLimit: 'Free tier on all models tagged `:free` with zero balance',
+    name: 'OpenRouter',
+    tagline: 'One key for models from many different companies',
+    models: 'Hundreds of models. Some are marked :free',
+    freeLimit: 'Models marked :free cost nothing, with daily request limits.',
     creditCardRequired: false,
-    bestFor: 'Trying dozens of open-weights models with 1 API key',
+    bestFor: 'Trying many models without signing up everywhere',
     url: 'https://openrouter.ai/models?max_price=0',
     steps: [
-      'Sign up at openrouter.ai using Google or GitHub',
-      'Go to Keys and generate a key with $0 balance',
-      'Select any model ending in `:free` (e.g. `deepseek/deepseek-r1:free`)'
+      'Sign up at openrouter.ai',
+      'Go to Keys and create a key',
+      'Pick a model whose name ends in :free'
     ]
   },
   {
     name: 'GitHub Models',
-    tagline: 'Free developer sandbox hosted directly in GitHub',
-    models: 'GPT-4o, Claude 3.5 Sonnet, Llama 3.3',
-    freeLimit: 'Free prototyping tier (50-150 requests/day per account)',
+    tagline: 'Free model playground inside GitHub',
+    models: 'A catalog of models from several companies, listed on the page',
+    freeLimit: 'Free with daily and per-minute limits, set by model.',
     creditCardRequired: false,
-    bestFor: 'Testing commercial models without paying upfront',
+    bestFor: 'Trying well-known models before paying for them',
     url: 'https://github.com/marketplace/models',
     steps: [
-      'Visit github.com/marketplace/models while logged in',
-      'Pick a model (like GPT-4o) and click "Playground"',
-      'Generate a free GitHub Personal Access Token to call it via code'
+      'Open github.com/marketplace/models while signed in',
+      'Pick a model and try it in the playground',
+      'To call it from code, create a GitHub personal access token'
     ]
   },
   {
-    name: 'Ollama (Local & Offline)',
-    tagline: '100% free, private, offline AI running on your laptop',
-    models: 'Llama 3, DeepSeek, Mistral, Qwen, Phi-3',
-    freeLimit: 'Unlimited forever! Runs locally on your CPU/GPU',
+    name: 'Ollama',
+    tagline: 'Free, private AI that runs on your own computer',
+    models: 'Open models such as Llama, Mistral, Qwen, Gemma, and gpt-oss',
+    freeLimit: 'No limit. It runs on your own machine, so speed depends on your computer.',
     creditCardRequired: false,
-    bestFor: 'Total data privacy, zero internet requirement, offline agents',
+    bestFor: 'Privacy, and working offline',
     url: 'https://ollama.com/',
     steps: [
       'Download Ollama from ollama.com for Mac, Windows, or Linux',
-      'Open your terminal and type: `ollama run llama3`',
-      'Access the local OpenAI-compatible API at `http://localhost:11434/v1`'
+      'Pick a model at ollama.com/library and run: ollama run followed by its name',
+      'Your code can call it at http://localhost:11434'
     ]
   },
   {
-    name: 'Hugging Face Inference',
-    tagline: 'Free access to thousands of open-source community checkpoints',
-    models: 'Over 100,000 text, audio, and vision checkpoints',
-    freeLimit: 'Free community rate-limited tier',
+    name: 'Hugging Face',
+    tagline: 'The biggest library of open models, with free trial access',
+    models: 'Thousands of open models for text, images, and audio',
+    freeLimit: 'Small monthly free credits for trying hosted models.',
     creditCardRequired: false,
-    bestFor: 'Niche domain models and custom fine-tunes',
-    url: 'https://huggingface.co/docs/api-inference/',
+    bestFor: 'Unusual or specialist models',
+    url: 'https://huggingface.co/',
     steps: [
       'Create a free account at huggingface.co',
-      'Go to Settings > Access Tokens > "Create New Token"',
-      'Call the serverless API directly using your token'
+      'Go to Settings > Access Tokens and create a token',
+      'Open a model page and use its "Use this model" or inference options'
     ]
   }
 ];
