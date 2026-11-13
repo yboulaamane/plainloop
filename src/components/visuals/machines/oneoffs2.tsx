@@ -698,6 +698,7 @@ export const Router: React.FC<Solo<'router'>> = ({ play }) => {
                   on={up[i]}
                   onChange={(on) => {
                     setUp(up.map((u, j) => (j === i ? on : u)));
+                    setResult(null);
                     setHappened(`You ${on ? 'brought' : 'knocked'} ${name.toLowerCase()} ${on ? 'back up' : 'offline'}. Send a question.`);
                   }}
                   onText="working"

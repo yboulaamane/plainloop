@@ -198,7 +198,7 @@ export const BubbleUniverse: React.FC<Props> = ({
         const faceY = n.y - depth;
 
         ctx.save();
-        ctx.globalAlpha = dim ? 0.38 : 1;
+        ctx.globalAlpha = dim ? 0.6 : 1;
 
         if (depth > 0) {
           ctx.beginPath();

@@ -40,7 +40,7 @@ export const Navbar: React.FC<Props> = ({
   );
 
   return (
-    <header className="sticky top-0 z-40 border-b-2 border-ink bg-bench">
+    <header className="top-0 z-40 border-b-2 border-ink bg-bench md:sticky">
       <div className="mx-auto max-w-7xl px-4 pb-3 pt-3 sm:px-8">
         <div className="flex items-center gap-3">
           <a href="#top" className="mr-auto flex min-w-0 items-center gap-3 rounded-md">

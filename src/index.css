@@ -87,7 +87,7 @@ code, pre, .font-mono {
     transition: transform 70ms ease-out, box-shadow 70ms ease-out, background-color 120ms;
     -webkit-tap-highlight-color: transparent;
   }
-  .key:hover:not(:disabled) {
+  .key:hover:not(:disabled):not([aria-pressed='true']):not([aria-checked='true']):not(.key-accent) {
     background-color: rgb(var(--accent) / 0.16);
   }
   .key:active:not(:disabled) {
