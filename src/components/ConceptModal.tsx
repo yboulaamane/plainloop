@@ -72,7 +72,7 @@ export const ConceptModal: React.FC<Props> = ({
         particleCount: 48,
         spread: 60,
         origin: { y: 0.75 },
-        colors: ['#c93a18', '#1b1814', '#fbf7ec'],
+        colors: ['#08783f', '#15181a', '#f7f8f4'],
       });
     }
   };

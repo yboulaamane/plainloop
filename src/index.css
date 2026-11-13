@@ -4,19 +4,19 @@
 
 /*
   Plainloop is one object: paper on a workbench.
-  Ink for words and edges, one strong accent for whatever is lit or chosen,
+  Cool drafting paper, ink for words and edges, one green for whatever is lit or chosen,
   and keys that visibly go down when you press them.
 */
 :root {
   color-scheme: light;
-  --bench: 233 225 207;
-  --sheet: 251 247 236;
-  --ink: 27 24 20;
-  --soft: 77 70 60;
-  --rule: 205 195 172;
-  --accent: 201 58 24;
-  --onaccent: 255 250 240;
-  --edge: 27 24 20;
+  --bench: 222 226 220;
+  --sheet: 247 248 244;
+  --ink: 21 24 26;
+  --soft: 66 73 75;
+  --rule: 192 199 190;
+  --accent: 8 120 63;
+  --onaccent: 247 248 244;
+  --edge: 21 24 26;
   font-family: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
   font-size: 18px;
   -webkit-font-smoothing: antialiased;
@@ -25,14 +25,14 @@
 
 html.dark {
   color-scheme: dark;
-  --bench: 20 18 15;
-  --sheet: 34 30 25;
-  --ink: 244 237 220;
-  --soft: 200 191 172;
-  --rule: 74 67 56;
-  --accent: 255 120 74;
-  --onaccent: 20 18 15;
-  --edge: 122 112 96;
+  --bench: 16 19 18;
+  --sheet: 27 32 31;
+  --ink: 236 240 233;
+  --soft: 186 194 187;
+  --rule: 58 66 63;
+  --accent: 62 214 128;
+  --onaccent: 10 20 15;
+  --edge: 109 120 115;
 }
 
 body {

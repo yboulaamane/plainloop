@@ -23,8 +23,8 @@ interface Node {
 
 // The same paper, ink, and accent as the rest of the site (see index.css).
 const PAPER = {
-  light: { sheet: '#fbf7ec', ink: '#1b1814', edge: '#1b1814', accent: '#c93a18', onaccent: '#fffaf0' },
-  dark: { sheet: '#221e19', ink: '#f4eddc', edge: '#7a7060', accent: '#ff784a', onaccent: '#14120f' },
+  light: { sheet: '#f7f8f4', ink: '#15181a', edge: '#15181a', accent: '#08783f', onaccent: '#f7f8f4' },
+  dark: { sheet: '#1b201f', ink: '#ecf0e9', edge: '#6d7873', accent: '#3ed680', onaccent: '#0a140f' },
 };
 
 function labelLines(label: string): string[] {
