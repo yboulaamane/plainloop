@@ -565,7 +565,10 @@ export const Loop: React.FC<MachineProps<LoopSpec>> = ({ play, toy }) => {
           {run.cycle && <p>Failed tries: <span className="font-mono text-accent">{laps}</span></p>}
           {run.script && <p>Steps taken: <span className="font-mono text-accent">{n}</span></p>}
           {cents != null && (
-            <p>Bill so far: <span className="font-mono text-accent">${(cents / 100).toFixed(2)}</span></p>
+            <>
+              <p>Bill so far: <span className="font-mono text-accent">${(cents / 100).toFixed(2)}</span></p>
+              <p className="text-base font-normal">A made-up price per try.</p>
+            </>
           )}
         </div>
       </div>
@@ -867,6 +870,7 @@ export const Matrix: React.FC<MachineProps<MatrixSpec>> = ({ play, toy }) => {
             {s.meters.map((m, i) => (
               <Meter key={i} label={toy.meterNames?.[i] ?? ''} value={m.value} text={m.text} hot={m.value > 0.6} />
             ))}
+            <p className="text-base">Made-up numbers, to show the difference. Real ones depend on the model and the question.</p>
           </div>
         )}
       </Slip>

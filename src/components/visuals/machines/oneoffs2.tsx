@@ -118,21 +118,33 @@ const PAGE =
   'You will get a tracking link by email as soon as it ships. If anything arrives damaged, ' +
   'reply to this message with a photograph and we will send a replacement immediately.';
 
+// Real tokenizers keep common words whole and split rare or long ones,
+// often at an ending like -ing or -ment. This rule does a rough version of
+// that, so a paragraph comes out near the usual 1.3 tokens per word.
+const ENDINGS = ['ization', 'ation', 'ately', 'ment', 'ness', 'ing', 'ize', 'ous', 'ly', 'ed'];
+
+function splitEven(word: string, size: number): string[] {
+  const pieces = Math.ceil(word.length / size);
+  const base = Math.floor(word.length / pieces);
+  let extra = word.length % pieces;
+  const out: string[] = [];
+  let i = 0;
+  while (i < word.length) {
+    const len = base + (extra-- > 0 ? 1 : 0);
+    out.push(word.slice(i, i + len));
+    i += len;
+  }
+  return out;
+}
+
 function chop(text: string): string[] {
   const parts = text.match(/[A-Za-z0-9’']+|[^\sA-Za-z0-9’']/g) ?? [];
   return parts.flatMap((word) => {
-    if (word.length <= 4) return [word];
-    const pieces = Math.ceil(word.length / 4);
-    const base = Math.floor(word.length / pieces);
-    let extra = word.length % pieces;
-    const out: string[] = [];
-    let i = 0;
-    while (i < word.length) {
-      const size = base + (extra-- > 0 ? 1 : 0);
-      out.push(word.slice(i, i + size));
-      i += size;
-    }
-    return out;
+    if (word.length <= 7) return [word];
+    const ending = ENDINGS.find((e) => word.toLowerCase().endsWith(e) && word.length - e.length >= 3);
+    const stem = ending ? word.slice(0, word.length - ending.length) : word;
+    const head = stem.length <= 7 ? [stem] : splitEven(stem, 5);
+    return ending ? [...head, word.slice(stem.length)] : head;
   });
 }
 
@@ -201,7 +213,7 @@ export const Chopper: React.FC<Solo<'chopper'>> = ({ play }) => {
         Words: <span className="font-mono text-accent">{wordCount}</span> · Chunks the model reads:{' '}
         <span className="font-mono text-accent">{cut ? chunks.length : '?'}</span>
       </p>
-      <p className="mt-1 text-base">Real models cut in slightly different places. The idea is the same.</p>
+      <p className="mt-1 text-base">Each model cuts text in its own way. Common words are usually one token, and rare or long words get split.</p>
 
       <Outcome play={play} choice={touched ? (cut ? 1 : 0) : null}>{happened}</Outcome>
     </div>
