@@ -766,6 +766,7 @@ export const Distill: React.FC<Solo<'distill'>> = ({ play }) => {
           <p className="text-base font-bold">Users answered: <span className="font-mono text-accent">{served[1]}</span></p>
         </Part>
       </div>
+      <p className="mt-3 text-base">The times and prices here are made up, to show the difference.</p>
 
       <Outcome play={play} choice={mode === 0 ? (served[0] ? 0 : null) : served[1] ? 1 : null}>{happened}</Outcome>
     </div>
